@@ -8,9 +8,9 @@
 >>  
 >> `get-started`  testnet 的使用说明
 >>> `How-to-install.md`/`How-to-install_CN.md`  安装教程  
->>> `keeper.md`/`keeper_CN.md`  keeper使用教程  
->>> `provider.md`/`provider_CN.md`  provider使用教程  
->>> `user.md`/`user_CN.md`  user使用教程  
+>>> `keeper-usage.md`/`keeper-usage_CN.md`  keeper使用教程  
+>>> `provider-usage.md`/`provider-usage_CN.md`  provider使用教程  
+>>> `user-usage.md`/`user-usage_CN.md`  user使用教程  
 
 > `doc`  
 > 项目文档仓库。
@@ -20,17 +20,17 @@
 >>
 >> `api`  
 >>>api使用文档，可以分角色
->>> `golang-client-api-reference.md`   
->>> `user.md`/`user_CN.md`  
->>> `keeper.md`/`keeper_CN.md`  
->>> `provider.md`/`provider_CN.md`
+>>> `golang-client-api-reference.md`/`golang-client-api-reference_CN.md`  
 >>>
 >> `cmd`
 >>> 命令行相关的说明文档  
 >>> `lfs.md`/`lfs_CN.md`  
->>> `user.md`/`user_CN.md`  
->>> `keeper.md`/`keeper_CN.md`  
->>> `provider.md`/`provider_CN.md`  
+>>> `lfs-user.md`/`lfs-user_CN.md`  
+>>> `lfs-keeper.md`/`lfs-keeper_CN.md`  
+>>> `lfs-provider.md`/`lfs-provider_CN.md`  
+>>>
+>> `gateway`
+>>> `gateway-reference.md`/`gateway-reference_CN.md`
 
 > `mefs-http-api-go`  
 > go语言api仓库
@@ -40,7 +40,7 @@
 >>
 
 > `mefs-http-api-js`
-> go语言api仓库
+> javascript api仓库
 >> `Readme.md` 仓库介绍文档  
 >> `Readme_CN.md` 中文版仓库介绍文档  
 >> `sourcecode` 源码存放目录（如果有）
