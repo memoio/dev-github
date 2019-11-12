@@ -1,0 +1,396 @@
+# MEFS Go Client API文档
+
+## 初使化MinIO Client对象
+
+##  MinIO
+
+```go
+package main
+
+import (
+    "fmt"
+
+    "github.com/minio/minio-go/v6"
+)
+
+func main() {
+        // 使用ssl
+        ssl := true
+
+        // 初使化minio client对象。
+        minioClient, err := minio.New("play.min.io", "Q3AM3UQ867SPQQA43P2F", "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG", ssl)
+        if err != nil {
+                fmt.Println(err)
+                return
+        }
+}
+```
+
+## AWS S3
+
+```go
+package main
+
+import (
+    "fmt"
+
+    "github.com/minio/minio-go/v6"
+)
+
+func main() {
+        // 使用ssl
+        ssl := true
+
+        // 初使化minio client对象。
+        s3Client, err := minio.New("s3.amazonaws.com", "YOUR-ACCESSKEYID", "YOUR-SECRETACCESSKEY", ssl)
+        if err != nil {
+                fmt.Println(err)
+                return
+        }
+}
+```
+
+| 操作存储桶                                         | 操作对象                                              |
+| :---                                              | :---                                                |
+| [`MakeBucket`](#MakeBucket)                       | [`GetObject`](#GetObject)                           |
+| [`ListBuckets`](#ListBuckets)                     | [`PutObject`](#PutObject)                           |
+| [`BucketExists`](#BucketExists)                   | [`StatObject`](#StatObject)                         |
+| [`RemoveBucket`](#RemoveBucket)                   | [`RemoveObject`](#RemoveObject)                     |
+| [`ListObjects`](#ListObjects)                     ||
+
+## 1. 构造函数
+<a name="MinIO"></a>
+
+### New(endpoint, accessKeyID, secretAccessKey string, ssl bool) (*Client, error)
+初使化一个新的client对象。
+
+__参数__
+
+|参数   | 类型   |描述   |
+|:---|:---| :---|
+|`endpoint`   | _string_  |S3兼容对象存储服务endpoint   |
+|`accessKeyID`  |_string_   |对象存储的Access key |
+|`secretAccessKey`  | _string_  |对象存储的Secret key |
+|`ssl`   | _bool_  |true代表使用HTTPS |
+
+### NewWithRegion(endpoint, accessKeyID, secretAccessKey string, ssl bool, region string) (*Client, error)
+初使化minio client,带有region配置。和New()不同的是，NewWithRegion避免了bucket-location操作，所以会快那么一丢丢。如果你的应用只使用一个region的话可以用这个方法。
+
+__参数__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`endpoint`   | _string_  |S3兼容对象存储服务endpoint |
+|`accessKeyID`  |_string_   |对象存储的Access key |
+|`secretAccessKey`  | _string_  |对象存储的Secret key |
+|`ssl` | _bool_  |true代表使用HTTPS |
+|`region`| _string_ | 对象存储的region |
+
+## 2. 操作存储桶
+
+<a name="MakeBucket"></a>
+### MakeBucket(bucketName, location string) error
+创建一个存储桶。
+
+__参数__
+
+| 参数  | 类型  | 描述  |
+|---|---|---|
+|`bucketName`  | _string_  | 存储桶名称 |
+| `location`  |  _string_ | |
+
+__示例__
+
+```go
+err = minioClient.MakeBucket("mybucket", "us-east-1")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+fmt.Println("Successfully created mybucket.")
+```
+
+<a name="ListBuckets"></a>
+### ListBuckets() ([]BucketInfo, error)
+列出所有的存储桶。
+
+| 参数  | 类型   | 描述  |
+|---|---|---|
+|`bucketList`  | _[]minio.BucketInfo_  | 所有存储桶的list。 |
+
+__minio.BucketInfo__
+
+| 参数  | 类型   | 描述  |
+|---|---|---|
+|`bucket.Name`  | _string_  | 存储桶名称 |
+|`bucket.CreationDate`  | _time.Time_  | 存储桶的创建时间 |
+
+__示例__
+
+```go
+buckets, err := minioClient.ListBuckets()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+for _, bucket := range buckets {
+    fmt.Println(bucket)
+}
+```
+
+<a name="BucketExists"></a>
+### BucketExists(bucketName string) (found bool, err error)
+检查存储桶是否存在。
+
+__参数__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`bucketName`  | _string_  |存储桶名称 |
+
+__返回值__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`found`  | _bool_ | 存储桶是否存在  |
+|`err` | _error_  | 标准Error  |
+
+__示例__
+
+```go
+found, err := minioClient.BucketExists("mybucket")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+if found {
+    fmt.Println("Bucket found")
+}
+```
+
+<a name="RemoveBucket"></a>
+### RemoveBucket(bucketName string) error
+删除一个存储桶，存储桶必须为空才能被成功删除。
+
+__参数__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`bucketName`  | _string_  |存储桶名称   |
+
+__示例__
+
+
+```go
+err = minioClient.RemoveBucket("mybucket")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+```
+
+<a name="ListObjects"></a>
+### ListObjects(bucketName, prefix string, recursive bool, doneCh chan struct{}) <-chan ObjectInfo
+列举存储桶里的对象。
+
+__参数__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`bucketName` | _string_  |存储桶名称   |
+|`objectPrefix` |_string_   | 要列举的对象前缀 |
+|`recursive`  | _bool_  |`true`代表递归查找，`false`代表类似文件夹查找，以'/'分隔，不查子文件夹。  |
+|`doneCh`  | _chan struct{}_ | 在该channel上结束ListObjects iterator的一个message。 |
+
+__返回值__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`objectInfo`  | _chan minio.ObjectInfo_ |存储桶中所有对象的read channel，对象的格式如下： |
+
+__minio.ObjectInfo__
+
+|属性   |类型   |描述   |
+|:---|:---| :---|
+|`objectInfo.Key`  | _string_ |对象的名称 |
+|`objectInfo.Size`  | _int64_ |对象的大小 |
+|`objectInfo.ETag`  | _string_ |对象的MD5校验码 |
+|`objectInfo.LastModified`  | _time.Time_ |对象的最后修改时间 |
+
+```go
+// Create a done channel to control 'ListObjects' go routine.
+doneCh := make(chan struct{})
+
+// Indicate to our routine to exit cleanly upon return.
+defer close(doneCh)
+
+isRecursive := true
+objectCh := minioClient.ListObjects("mybucket", "myprefix", isRecursive, doneCh)
+for object := range objectCh {
+    if object.Err != nil {
+        fmt.Println(object.Err)
+        return
+    }
+    fmt.Println(object)
+}
+```
+
+## 3. 操作对象
+
+<a name="GetObject"></a>
+### GetObject(bucketName, objectName string, opts GetObjectOptions) (*Object, error)
+返回对象数据的流，error是读流时经常抛的那些错。
+
+__参数__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`bucketName`  | _string_  |存储桶名称  |
+|`objectName` | _string_  |对象的名称  |
+|`opts` | _minio.GetObjectOptions_ | GET请求的一些额外参数，像encryption，If-Match |
+
+__minio.GetObjectOptions__
+
+|参数 | 类型 | 描述 |
+|:---|:---|:---|
+| `opts.Materials` | _encrypt.Materials_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/minio/minio-go/v6) |
+
+__返回值__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`object`  | _*minio.Object_ |_minio.Object_代表了一个object reader。它实现了io.Reader, io.Seeker, io.ReaderAt and io.Closer接口。 |
+
+__示例__
+
+```go
+object, err := minioClient.GetObject("mybucket", "myobject", minio.GetObjectOptions{})
+if err != nil {
+    fmt.Println(err)
+    return
+}
+localFile, err := os.Create("/tmp/local-file.jpg")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+if _, err = io.Copy(localFile, object); err != nil {
+    fmt.Println(err)
+    return
+}
+```
+
+<a name="FGetObject"></a>
+### PutObject(bucketName, objectName string, reader io.Reader, objectSize int64,opts PutObjectOptions) (n int, err error)
+当对象小于128MiB时，直接在一次PUT请求里进行上传。当大于128MiB时，根据文件的实际大小，PutObject会自动地将对象进行拆分成128MiB一块或更大一些进行上传。对象的最大大小是5TB。
+
+__参数__
+
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`bucketName`  | _string_  |存储桶名称  |
+|`objectName` | _string_  |对象的名称   |
+|`reader` | _io.Reader_  |任意实现了io.Reader的GO类型 |
+|`objectSize`| _int64_ |上传的对象的大小，-1代表未知。 |
+|`opts` | _minio.PutObjectOptions_  |  允许用户设置可选的自定义元数据，内容标题，加密密钥和用于分段上传操作的线程数量。 |
+
+__minio.PutObjectOptions__
+
+|属性 | 类型 | 描述 |
+|:--- |:--- | :--- |
+| `opts.UserMetadata` | _map[string]string_ | 用户元数据的Map|
+| `opts.Progress` | _io.Reader_ | 获取上传进度的Reader |
+| `opts.ContentType` | _string_ | 对象的Content type， 例如"application/text" |
+| `opts.ContentEncoding` | _string_ | 对象的Content encoding，例如"gzip" |
+| `opts.ContentDisposition` | _string_ | 对象的Content disposition, "inline" |
+| `opts.CacheControl` | _string_ | 指定针对请求和响应的缓存机制，例如"max-age=600"|
+| `opts.EncryptMaterials` | _encrypt.Materials_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/minio/minio-go/v6) |
+
+__示例__
+
+```go
+file, err := os.Open("my-testfile")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer file.Close()
+
+fileStat, err := file.Stat()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+
+n, err := minioClient.PutObject("mybucket", "myobject", file, fileStat.Size(), minio.PutObjectOptions{ContentType:"application/octet-stream"})
+if err != nil {
+    fmt.Println(err)
+    return
+}
+fmt.Println("Successfully uploaded bytes: ", n)
+```
+
+<a name="PutObjectWithContext"></a>
+### StatObject(bucketName, objectName string, opts StatObjectOptions) (ObjectInfo, error)
+获取对象的元数据。
+
+__参数__
+
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`bucketName`  | _string_  |存储桶名称  |
+|`objectName` | _string_  |对象的名称   |
+|`opts` | _minio.StatObjectOptions_ | GET info/stat请求的一些额外参数，像encryption，If-Match |
+
+
+__返回值__
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`objInfo`  | _minio.ObjectInfo_  |对象stat信息 |
+
+
+__minio.ObjectInfo__
+
+|属性   |类型   |描述   |
+|:---|:---| :---|
+|`objInfo.LastModified`  | _time.Time_  |对象的最后修改时间 |
+|`objInfo.ETag` | _string_ |对象的MD5校验码|
+|`objInfo.ContentType` | _string_ |对象的Content type|
+|`objInfo.Size` | _int64_ |对象的大小|
+
+
+__示例__
+
+
+```go
+objInfo, err := minioClient.StatObject("mybucket", "myobject", minio.StatObjectOptions{})
+if err != nil {
+    fmt.Println(err)
+    return
+}
+fmt.Println(objInfo)
+```
+
+<a name="RemoveObject"></a>
+### RemoveObject(bucketName, objectName string) error
+删除一个对象。
+
+__参数__
+
+
+|参数   |类型   |描述   |
+|:---|:---| :---|
+|`bucketName`  | _string_  |存储桶名称  |
+|`objectName` | _string_  |对象的名称 |
+
+
+```go
+err = minioClient.RemoveObject("mybucket", "myobject")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+```
