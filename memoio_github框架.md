@@ -23,11 +23,8 @@
 >>> `golang-client-api-reference.md`/`golang-client-api-reference_CN.md`  
 >>>
 >> `cmd`
->>> 命令行相关的说明文档  
->>> `lfs.md`/`lfs_CN.md`  
->>> `lfs-user.md`/`lfs-user_CN.md`  
->>> `lfs-keeper.md`/`lfs-keeper_CN.md`  
->>> `lfs-provider.md`/`lfs-provider_CN.md`  
+>>> 命令行相关的说明文档    
+>>> `mefs-command.md`/`mefs-command_CN.md`  
 >>>
 >> `gateway`
 >>> `gateway-reference.md`/`gateway-reference_CN.md`
