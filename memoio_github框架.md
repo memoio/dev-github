@@ -23,11 +23,9 @@
 >>> `golang-client-api-reference.md`/`golang-client-api-reference_CN.md`  
 >>>
 >> `cmd`
->>> 命令行相关的说明文档    
+>>> 命令行相关的说明文档  
 >>> `mefs-command.md`/`mefs-command_CN.md`  
 >>>
->> `gateway`
->>> `gateway-reference.md`/`gateway-reference_CN.md`
 
 > `mefs-http-api-go`  
 > go语言api仓库
@@ -36,12 +34,19 @@
 >> `sourcecode` 源码存放目录（如果有）  
 >>
 
-> `mefs-http-api-js`
+> `mefs-http-api-js`  
 > javascript api仓库
 >> `Readme.md` 仓库介绍文档  
 >> `Readme_CN.md` 中文版仓库介绍文档  
 >> `sourcecode` 源码存放目录（如果有）
 >>
+
+> `mefs-sdk-go`  
+> 适用于mefs的go sdk，基于minio格式
+>> `sourcecode` 源码存放目录
+>> `Readme.md` 仓库介绍文档  
+>> `Readme_CN.md` 中文版仓库介绍文档  
+
 
 # 外部库
 
