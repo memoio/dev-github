@@ -1,8 +1,8 @@
 # MEFS Go Client API文档
 
-## 初使化MinIO Client对象
+## 初使化MEFS Client对象
 
-##  MinIO
+##  MEFS
 
 ```go
 package main
@@ -10,15 +10,15 @@ package main
 import (
     "fmt"
 
-    "github.com/minio/minio-go/v6"
+    "github.com/memoio/mefs-sdk-go"
 )
 
 func main() {
         // 使用ssl
         ssl := true
 
-        // 初使化minio client对象。
-        minioClient, err := minio.New("play.min.io", "Q3AM3UQ867SPQQA43P2F", "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG", ssl)
+        // 初使化mefs client对象。
+        mefsClient, err := mefs.New("play.min.io", "Q3AM3UQ867SPQQA43P2F", "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG", ssl)
         if err != nil {
                 fmt.Println(err)
                 return
@@ -34,15 +34,15 @@ package main
 import (
     "fmt"
 
-    "github.com/minio/minio-go/v6"
+    "github.com/memoio/mefs-sdk-go"
 )
 
 func main() {
         // 使用ssl
         ssl := true
 
-        // 初使化minio client对象。
-        s3Client, err := minio.New("s3.amazonaws.com", "YOUR-ACCESSKEYID", "YOUR-SECRETACCESSKEY", ssl)
+        // 初使化mefs client对象。
+        s3Client, err := mefs.New("s3.amazonaws.com", "YOUR-ACCESSKEYID", "YOUR-SECRETACCESSKEY", ssl)
         if err != nil {
                 fmt.Println(err)
                 return
@@ -59,7 +59,7 @@ func main() {
 | [`ListObjects`](#ListObjects)                     ||
 
 ## 1. 构造函数
-<a name="MinIO"></a>
+<a name="MEFS"></a>
 
 ### New(endpoint, accessKeyID, secretAccessKey string, ssl bool) (*Client, error)
 初使化一个新的client对象。
@@ -74,7 +74,7 @@ __参数__
 |`ssl`   | _bool_  |true代表使用HTTPS |
 
 ### NewWithRegion(endpoint, accessKeyID, secretAccessKey string, ssl bool, region string) (*Client, error)
-初使化minio client,带有region配置。和New()不同的是，NewWithRegion避免了bucket-location操作，所以会快那么一丢丢。如果你的应用只使用一个region的话可以用这个方法。
+初使化mefs client,带有region配置。和New()不同的是，NewWithRegion避免了bucket-location操作，所以会快那么一丢丢。如果你的应用只使用一个region的话可以用这个方法。
 
 __参数__
 
@@ -102,7 +102,7 @@ __参数__
 __示例__
 
 ```go
-err = minioClient.MakeBucket("mybucket", "us-east-1")
+err = mefsClient.MakeBucket("mybucket", "us-east-1")
 if err != nil {
     fmt.Println(err)
     return
@@ -116,9 +116,9 @@ fmt.Println("Successfully created mybucket.")
 
 | 参数  | 类型   | 描述  |
 |---|---|---|
-|`bucketList`  | _[]minio.BucketInfo_  | 所有存储桶的list。 |
+|`bucketList`  | _[]mefs.BucketInfo_  | 所有存储桶的list。 |
 
-__minio.BucketInfo__
+__mefs.BucketInfo__
 
 | 参数  | 类型   | 描述  |
 |---|---|---|
@@ -128,7 +128,7 @@ __minio.BucketInfo__
 __示例__
 
 ```go
-buckets, err := minioClient.ListBuckets()
+buckets, err := mefsClient.ListBuckets()
 if err != nil {
     fmt.Println(err)
     return
@@ -158,7 +158,7 @@ __返回值__
 __示例__
 
 ```go
-found, err := minioClient.BucketExists("mybucket")
+found, err := mefsClient.BucketExists("mybucket")
 if err != nil {
     fmt.Println(err)
     return
@@ -182,7 +182,7 @@ __示例__
 
 
 ```go
-err = minioClient.RemoveBucket("mybucket")
+err = mefsClient.RemoveBucket("mybucket")
 if err != nil {
     fmt.Println(err)
     return
@@ -206,9 +206,9 @@ __返回值__
 
 |参数   |类型   |描述   |
 |:---|:---| :---|
-|`objectInfo`  | _chan minio.ObjectInfo_ |存储桶中所有对象的read channel，对象的格式如下： |
+|`objectInfo`  | _chan mefs.ObjectInfo_ |存储桶中所有对象的read channel，对象的格式如下： |
 
-__minio.ObjectInfo__
+__mefs.ObjectInfo__
 
 |属性   |类型   |描述   |
 |:---|:---| :---|
@@ -225,7 +225,7 @@ doneCh := make(chan struct{})
 defer close(doneCh)
 
 isRecursive := true
-objectCh := minioClient.ListObjects("mybucket", "myprefix", isRecursive, doneCh)
+objectCh := mefsClient.ListObjects("mybucket", "myprefix", isRecursive, doneCh)
 for object := range objectCh {
     if object.Err != nil {
         fmt.Println(object.Err)
@@ -247,24 +247,24 @@ __参数__
 |:---|:---| :---|
 |`bucketName`  | _string_  |存储桶名称  |
 |`objectName` | _string_  |对象的名称  |
-|`opts` | _minio.GetObjectOptions_ | GET请求的一些额外参数，像encryption，If-Match |
+|`opts` | _mefs.GetObjectOptions_ | GET请求的一些额外参数，像encryption，If-Match |
 
-__minio.GetObjectOptions__
+__mefs.GetObjectOptions__
 
 |参数 | 类型 | 描述 |
 |:---|:---|:---|
-| `opts.Materials` | _encrypt.Materials_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/minio/minio-go/v6) |
+| `opts.Materials` | _encrypt.Materials_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/memoio/mefs-sdk-go) |
 
 __返回值__
 
 |参数   |类型   |描述   |
 |:---|:---| :---|
-|`object`  | _*minio.Object_ |_minio.Object_代表了一个object reader。它实现了io.Reader, io.Seeker, io.ReaderAt and io.Closer接口。 |
+|`object`  | _*mefs.Object_ |_mefs.Object_代表了一个object reader。它实现了io.Reader, io.Seeker, io.ReaderAt and io.Closer接口。 |
 
 __示例__
 
 ```go
-object, err := minioClient.GetObject("mybucket", "myobject", minio.GetObjectOptions{})
+object, err := mefsClient.GetObject("mybucket", "myobject", mefs.GetObjectOptions{})
 if err != nil {
     fmt.Println(err)
     return
@@ -293,9 +293,9 @@ __参数__
 |`objectName` | _string_  |对象的名称   |
 |`reader` | _io.Reader_  |任意实现了io.Reader的GO类型 |
 |`objectSize`| _int64_ |上传的对象的大小，-1代表未知。 |
-|`opts` | _minio.PutObjectOptions_  |  允许用户设置可选的自定义元数据，内容标题，加密密钥和用于分段上传操作的线程数量。 |
+|`opts` | _mefs.PutObjectOptions_  |  允许用户设置可选的自定义元数据，内容标题，加密密钥和用于分段上传操作的线程数量。 |
 
-__minio.PutObjectOptions__
+__mefs.PutObjectOptions__
 
 |属性 | 类型 | 描述 |
 |:--- |:--- | :--- |
@@ -305,7 +305,7 @@ __minio.PutObjectOptions__
 | `opts.ContentEncoding` | _string_ | 对象的Content encoding，例如"gzip" |
 | `opts.ContentDisposition` | _string_ | 对象的Content disposition, "inline" |
 | `opts.CacheControl` | _string_ | 指定针对请求和响应的缓存机制，例如"max-age=600"|
-| `opts.EncryptMaterials` | _encrypt.Materials_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/minio/minio-go/v6) |
+| `opts.EncryptMaterials` | _encrypt.Materials_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/memoio/mefs-sdk-go) |
 
 __示例__
 
@@ -323,7 +323,7 @@ if err != nil {
     return
 }
 
-n, err := minioClient.PutObject("mybucket", "myobject", file, fileStat.Size(), minio.PutObjectOptions{ContentType:"application/octet-stream"})
+n, err := mefsClient.PutObject("mybucket", "myobject", file, fileStat.Size(), mefs.PutObjectOptions{ContentType:"application/octet-stream"})
 if err != nil {
     fmt.Println(err)
     return
@@ -342,17 +342,17 @@ __参数__
 |:---|:---| :---|
 |`bucketName`  | _string_  |存储桶名称  |
 |`objectName` | _string_  |对象的名称   |
-|`opts` | _minio.StatObjectOptions_ | GET info/stat请求的一些额外参数，像encryption，If-Match |
+|`opts` | _mefs.StatObjectOptions_ | GET info/stat请求的一些额外参数，像encryption，If-Match |
 
 
 __返回值__
 
 |参数   |类型   |描述   |
 |:---|:---| :---|
-|`objInfo`  | _minio.ObjectInfo_  |对象stat信息 |
+|`objInfo`  | _mefs.ObjectInfo_  |对象stat信息 |
 
 
-__minio.ObjectInfo__
+__mefs.ObjectInfo__
 
 |属性   |类型   |描述   |
 |:---|:---| :---|
@@ -366,7 +366,7 @@ __示例__
 
 
 ```go
-objInfo, err := minioClient.StatObject("mybucket", "myobject", minio.StatObjectOptions{})
+objInfo, err := mefsClient.StatObject("mybucket", "myobject", mefs.StatObjectOptions{})
 if err != nil {
     fmt.Println(err)
     return
@@ -388,7 +388,7 @@ __参数__
 
 
 ```go
-err = minioClient.RemoveObject("mybucket", "myobject")
+err = mefsClient.RemoveObject("mybucket", "myobject")
 if err != nil {
     fmt.Println(err)
     return

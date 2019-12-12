@@ -1,8 +1,8 @@
 # MEFS Go Client API Reference
 
-## Initialize MinIO Client object
+## Initialize MEFS Client object
 
-##  MinIO
+##  MEFS
 
 ```go
 package main
@@ -10,15 +10,15 @@ package main
 import (
     "fmt"
 
-    "github.com/minio/minio-go/v6"
+    "github.com/memoio/mefs-sdk-go"
 )
 
 func main() {
         // Use a secure connection.
         ssl := true
 
-        // Initialize minio client object.
-        minioClient, err := minio.New("play.min.io", "Q3AM3UQ867SPQQA43P2F", "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG", ssl)
+        // Initialize mefs client object.
+        mefsClient, err := mefs.New("play.min.io", "Q3AM3UQ867SPQQA43P2F", "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG", ssl)
         if err != nil {
                 fmt.Println(err)
                 return
@@ -34,15 +34,15 @@ package main
 import (
     "fmt"
 
-    "github.com/minio/minio-go/v6"
+    "github.com/memoio/mefs-sdk-go"
 )
 
 func main() {
         // Use a secure connection.
         ssl := true
 
-        // Initialize minio client object.
-        s3Client, err := minio.New("s3.amazonaws.com", "YOUR-ACCESSKEYID", "YOUR-SECRETACCESSKEY", ssl)
+        // Initialize mefs client object.
+        s3Client, err := mefs.New("s3.amazonaws.com", "YOUR-ACCESSKEYID", "YOUR-SECRETACCESSKEY", ssl)
         if err != nil {
                 fmt.Println(err)
                 return
@@ -58,7 +58,7 @@ func main() {
 | [`RemoveBucket`](#RemoveBucket)            | [`RemoveObject`](#RemoveObject)                     |
 | [`ListObjects`](#ListObjects)              | |
 ## 1. Constructor
-<a name="MinIO"></a>
+<a name="MEFS"></a>
 
 ### New(endpoint, accessKeyID, secretAccessKey string, ssl bool) (*Client, error)
 Initializes a new client object.
@@ -73,19 +73,19 @@ __Parameters__
 |`ssl`   | _bool_  | If 'true' API requests will be secure (HTTPS), and insecure (HTTP) otherwise  |
 
 ### NewWithRegion(endpoint, accessKeyID, secretAccessKey string, ssl bool, region string) (*Client, error)
-Initializes minio client, with region configured. Unlike New(), NewWithRegion avoids bucket-location lookup operations and it is slightly faster. Use this function when your application deals with a single region.
+Initializes mefs client, with region configured. Unlike New(), NewWithRegion avoids bucket-location lookup operations and it is slightly faster. Use this function when your application deals with a single region.
 
 ### NewWithOptions(endpoint string, options *Options) (*Client, error)
-Initializes minio client with options configured.
+Initializes mefs client with options configured.
 
 __Parameters__
 
 |Param   |Type   |Description   |
 |:---|:---| :---|
 |`endpoint`   | _string_  |S3 compatible object storage endpoint |
-|`opts`  |_minio.Options_   | Options for constructing a new client|
+|`opts`  |_mefs.Options_   | Options for constructing a new client|
 
-__minio.Options__
+__mefs.Options__
 
 |Field | Type | Description |
 |:--- |:--- | :--- |
@@ -93,9 +93,9 @@ __minio.Options__
 | `opts.Secure` | _bool_ | If 'true' API requests will be secure (HTTPS), and insecure (HTTP) otherwise |
 | `opts.Region` | _string_ | region |
 | `opts.BucketLookup` | _BucketLookupType_ | Bucket lookup type can be one of the following values |
-| |  | _minio.BucketLookupDNS_ |
-| |  | _minio.BucketLookupPath_ |
-| |  | _minio.BucketLookupAuto_ |
+| |  | _mefs.BucketLookupDNS_ |
+| |  | _mefs.BucketLookupPath_ |
+| |  | _mefs.BucketLookupAuto_ |
 ## 2. Bucket operations
 
 <a name="MakeBucket"></a>
@@ -114,7 +114,7 @@ __Example__
 
 
 ```go
-err = minioClient.MakeBucket("mybucket", "us-east-1")
+err = mefsClient.MakeBucket("mybucket", "us-east-1")
 if err != nil {
     fmt.Println(err)
     return
@@ -128,10 +128,10 @@ Lists all buckets.
 
 | Param  | Type  | Description  |
 |---|---|---|
-|`bucketList`  | _[]minio.BucketInfo_  | Lists of all buckets |
+|`bucketList`  | _[]mefs.BucketInfo_  | Lists of all buckets |
 
 
-__minio.BucketInfo__
+__mefs.BucketInfo__
 
 | Field  | Type  | Description  |
 |---|---|---|
@@ -143,7 +143,7 @@ __Example__
 
 
 ```go
-buckets, err := minioClient.ListBuckets()
+buckets, err := mefsClient.ListBuckets()
 if err != nil {
     fmt.Println(err)
     return
@@ -177,7 +177,7 @@ __Example__
 
 
 ```go
-found, err := minioClient.BucketExists("mybucket")
+found, err := mefsClient.BucketExists("mybucket")
 if err != nil {
     fmt.Println(err)
     return
@@ -202,7 +202,7 @@ __Example__
 
 
 ```go
-err = minioClient.RemoveBucket("mybucket")
+err = mefsClient.RemoveBucket("mybucket")
 if err != nil {
     fmt.Println(err)
     return
@@ -228,9 +228,9 @@ __Return Value__
 
 |Param   |Type   |Description   |
 |:---|:---| :---|
-|`objectInfo`  | _chan minio.ObjectInfo_ |Read channel for all objects in the bucket, the object is of the format listed below: |
+|`objectInfo`  | _chan mefs.ObjectInfo_ |Read channel for all objects in the bucket, the object is of the format listed below: |
 
-__minio.ObjectInfo__
+__mefs.ObjectInfo__
 
 |Field   |Type   |Description   |
 |:---|:---| :---|
@@ -247,7 +247,7 @@ doneCh := make(chan struct{})
 defer close(doneCh)
 
 isRecursive := true
-objectCh := minioClient.ListObjects("mybucket", "myprefix", isRecursive, doneCh)
+objectCh := mefsClient.ListObjects("mybucket", "myprefix", isRecursive, doneCh)
 for object := range objectCh {
     if object.Err != nil {
         fmt.Println(object.Err)
@@ -271,28 +271,28 @@ __Parameters__
 |:---|:---| :---|
 |`bucketName`  | _string_  |Name of the bucket  |
 |`objectName` | _string_  |Name of the object  |
-|`opts` | _minio.GetObjectOptions_ | Options for GET requests specifying additional options like encryption, If-Match |
+|`opts` | _mefs.GetObjectOptions_ | Options for GET requests specifying additional options like encryption, If-Match |
 
 
-__minio.GetObjectOptions__
+__mefs.GetObjectOptions__
 
 |Field | Type | Description |
 |:---|:---|:---|
-| `opts.ServerSideEncryption` | _encrypt.ServerSide_ | Interface provided by `encrypt` package to specify server-side-encryption. (For more information see https://godoc.org/github.com/minio/minio-go/v6) |
+| `opts.ServerSideEncryption` | _encrypt.ServerSide_ | Interface provided by `encrypt` package to specify server-side-encryption. (For more information see https://godoc.org/github.com/mefs/mefs-go/v6) |
 
 __Return Value__
 
 
 |Param   |Type   |Description   |
 |:---|:---| :---|
-|`object`  | _*minio.Object_ |_minio.Object_ represents object reader. It implements io.Reader, io.Seeker, io.ReaderAt and io.Closer interfaces. |
+|`object`  | _*mefs.Object_ |_mefs.Object_ represents object reader. It implements io.Reader, io.Seeker, io.ReaderAt and io.Closer interfaces. |
 
 
 __Example__
 
 
 ```go
-object, err := minioClient.GetObject("mybucket", "myobject", minio.GetObjectOptions{})
+object, err := mefsClient.GetObject("mybucket", "myobject", mefs.GetObjectOptions{})
 if err != nil {
     fmt.Println(err)
     return
@@ -321,9 +321,9 @@ __Parameters__
 |`objectName` | _string_  |Name of the object   |
 |`reader` | _io.Reader_  |Any Go type that implements io.Reader |
 |`objectSize`| _int64_ |Size of the object being uploaded. Pass -1 if stream size is unknown |
-|`opts` | _minio.PutObjectOptions_  | Allows user to set optional custom metadata, content headers, encryption keys and number of threads for multipart upload operation. |
+|`opts` | _mefs.PutObjectOptions_  | Allows user to set optional custom metadata, content headers, encryption keys and number of threads for multipart upload operation. |
 
-__minio.PutObjectOptions__
+__mefs.PutObjectOptions__
 
 |Field | Type | Description |
 |:--- |:--- | :--- |
@@ -334,8 +334,8 @@ __minio.PutObjectOptions__
 | `opts.ContentDisposition` | _string_ | Content disposition of object, "inline" |
 | `opts.ContentLanguage` | _string_ | Content language of object, e.g "French" |
 | `opts.CacheControl` | _string_ | Used to specify directives for caching mechanisms in both requests and responses e.g "max-age=600"|
-| `opts.ServerSideEncryption` | _encrypt.ServerSide_ | Interface provided by `encrypt` package to specify server-side-encryption. (For more information see https://godoc.org/github.com/minio/minio-go/v6) |
-| `opts.StorageClass` | _string_ | Specify storage class for the object. Supported values for MinIO server are `REDUCED_REDUNDANCY` and `STANDARD` |
+| `opts.ServerSideEncryption` | _encrypt.ServerSide_ | Interface provided by `encrypt` package to specify server-side-encryption. (For more information see https://godoc.org/github.com/mefs/mefs-go/v6) |
+| `opts.StorageClass` | _string_ | Specify storage class for the object. Supported values for MEFS server are `REDUCED_REDUNDANCY` and `STANDARD` |
 | `opts.WebsiteRedirectLocation` | _string_ | Specify a redirect for the object, to another object in the same bucket or to a external URL. |
 
 __Example__
@@ -355,7 +355,7 @@ if err != nil {
     return
 }
 
-n, err := minioClient.PutObject("mybucket", "myobject", file, fileStat.Size(), minio.PutObjectOptions{ContentType:"application/octet-stream"})
+n, err := mefsClient.PutObject("mybucket", "myobject", file, fileStat.Size(), mefs.PutObjectOptions{ContentType:"application/octet-stream"})
 if err != nil {
     fmt.Println(err)
     return
@@ -363,7 +363,7 @@ if err != nil {
 fmt.Println("Successfully uploaded bytes: ", n)
 ```
 
-API methods PutObjectWithSize, PutObjectWithMetadata, PutObjectStreaming, and PutObjectWithProgress available in minio-go SDK release v3.0.3 are replaced by the new PutObject call variant that accepts a pointer to PutObjectOptions struct.
+API methods PutObjectWithSize, PutObjectWithMetadata, PutObjectStreaming, and PutObjectWithProgress available in mefs-go SDK release v3.0.3 are replaced by the new PutObject call variant that accepts a pointer to PutObjectOptions struct.
 
 <a name="PutObjectWithContext"></a>
 ### PutObjectWithContext(ctx context.Context, bucketName, objectName string, reader io.Reader, objectSize int64, opts PutObjectOptions) (n int, err error)
@@ -379,7 +379,7 @@ __Parameters__
 |`objectName` | _string_  |Name of the object   |
 |`reader` | _io.Reader_  |Any Go type that implements io.Reader |
 |`objectSize`| _int64_ | size of the object being uploaded. Pass -1 if stream size is unknown |
-|`opts` | _minio.PutObjectOptions_  |Pointer to struct that allows user to set optional custom metadata, content-type, content-encoding, content-disposition, content-language and cache-control headers, pass encryption module for encrypting objects, and optionally configure number of threads for multipart put operation. |
+|`opts` | _mefs.PutObjectOptions_  |Pointer to struct that allows user to set optional custom metadata, content-type, content-encoding, content-disposition, content-language and cache-control headers, pass encryption module for encrypting objects, and optionally configure number of threads for multipart put operation. |
 
 
 __Example__
@@ -402,7 +402,7 @@ if err != nil {
     return
 }
 
-n, err := minioClient.PutObjectWithContext(ctx, "my-bucketname", "my-objectname", file, fileStat.Size(), minio.PutObjectOptions{
+n, err := mefsClient.PutObjectWithContext(ctx, "my-bucketname", "my-objectname", file, fileStat.Size(), mefs.PutObjectOptions{
 	ContentType: "application/octet-stream",
 })
 if err != nil {
@@ -423,17 +423,17 @@ __Parameters__
 |:---|:---| :---|
 |`bucketName`  | _string_  |Name of the bucket  |
 |`objectName` | _string_  |Name of the object   |
-|`opts` | _minio.StatObjectOptions_ | Options for GET info/stat requests specifying additional options like encryption, If-Match |
+|`opts` | _mefs.StatObjectOptions_ | Options for GET info/stat requests specifying additional options like encryption, If-Match |
 
 
 __Return Value__
 
 |Param   |Type   |Description   |
 |:---|:---| :---|
-|`objInfo`  | _minio.ObjectInfo_  |Object stat information |
+|`objInfo`  | _mefs.ObjectInfo_  |Object stat information |
 
 
-__minio.ObjectInfo__
+__mefs.ObjectInfo__
 
 |Field   |Type   |Description   |
 |:---|:---| :---|
@@ -447,7 +447,7 @@ __Example__
 
 
 ```go
-objInfo, err := minioClient.StatObject("mybucket", "myobject", minio.StatObjectOptions{})
+objInfo, err := mefsClient.StatObject("mybucket", "myobject", mefs.StatObjectOptions{})
 if err != nil {
     fmt.Println(err)
     return
@@ -469,7 +469,7 @@ __Parameters__
 
 
 ```go
-err = minioClient.RemoveObject("mybucket", "myobject")
+err = mefsClient.RemoveObject("mybucket", "myobject")
 if err != nil {
     fmt.Println(err)
     return
