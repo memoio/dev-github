@@ -5,7 +5,7 @@ MEFS测试网的更新动态也会在这里说明
 
 ## 入门指南
 
-MEFS测试网分为三个角色，用户`User`、维护者`Keeper`、存储者`Provider`，具体使用请看[文档](/docs/get-started/How-to-install.md)
+MEFS测试网分为三个角色，用户`User`、维护者`Keeper`、存储者`Provider`，具体使用请看[文档](/testnet/get-started/How-to-install.md)
 
 ## 测试网动态
 

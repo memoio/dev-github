@@ -239,7 +239,7 @@ mefs.lfs.delete_object("bucket01","2.txt",function (err, deleteObjectInfo) {
 > flush lfs's metadata.
 
 ##### `mefs.lfs.fsync([option],function (err, createBucketInfo)`
-
+golang-client-api-reference
 `options` is an optional object argument that might include the following keys:
 
 - `addr` AddressID.The actual user's addressid that you want to execute. Type is `string`.

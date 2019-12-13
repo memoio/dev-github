@@ -13,14 +13,14 @@
 >>> `user-usage.md`/`user-usage_CN.md`  user使用教程  
 
 > `doc`  
-> 项目文档仓库。
->> `Readme.md` 仓库介绍文档  
->> `Readme_CN.md` 中文版仓库介绍文档  
+> 项目文档仓库
+>> `Readme.md`/`Readme_CN.md` 仓库介绍文档，包含文档索引  
 >> `whitepaper` 项目白皮书  
 >>
 >> `api`  
->>>api使用文档，可以分角色
->>> `golang-client-api-reference.md`/`golang-client-api-reference_CN.md`  
+>>api使用文档  
+>>> `http-api-go.md`/`http-api-go_CN.md` http api文档  
+>>> `s3-sdk-go.md`/`s3-sdk-go_CN.md` 基于minio的s3接口文档
 >>>
 >> `cmd`
 >>> 命令行相关的说明文档  
@@ -33,19 +33,6 @@
 >> `Readme_CN.md` 中文版仓库介绍文档  
 >> `sourcecode` 源码存放目录（如果有）  
 >>
-
-> `mefs-http-api-js`  
-> javascript api仓库
->> `Readme.md` 仓库介绍文档  
->> `Readme_CN.md` 中文版仓库介绍文档  
->> `sourcecode` 源码存放目录（如果有）
->>
-
-> `mefs-sdk-go`  
-> 适用于mefs的go sdk，基于minio格式
->> `sourcecode` 源码存放目录
->> `Readme.md` 仓库介绍文档  
->> `Readme_CN.md` 中文版仓库介绍文档  
 
 
 # 外部库
