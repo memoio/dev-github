@@ -1,3 +1,3 @@
 # dev-github
 
-GitHub repository of MEFs project
+GitHub repository of MEFS project
