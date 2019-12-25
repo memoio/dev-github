@@ -415,42 +415,6 @@ if err != nil {
 }
 ```
 
-<a name="FGetEncryptedObject"></a>
-### FGetEncryptedObject(bucketName, objectName, filePath string, materials encrypt.Materials) error
-和FGetObject操作是一样的，不过会对加密请求进行解密。
-
-__参数__
-
-
-|参数   |类型   |描述   |
-|:---|:---| :---|
-|`bucketName`  | _string_  |存储桶名称 |
-|`objectName` | _string_  |对象的名称  |
-|`filePath` | _string_  |下载后保存的路径|
-|`materials` | _encrypt.Materials_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/minio/minio-go/v6) |
-
-
-__示例__
-
-
-```go
-// Generate a master symmetric key
-key := encrypt.NewSymmetricKey([]byte("my-secret-key-00"))
-
-// Build the CBC encryption material
-cbcMaterials, err := encrypt.NewCBCSecureMaterials(key)
-if err != nil {
-    fmt.Println(err)
-    return
-}
-
-err = minioClient.FGetEncryptedObject("mybucket", "myobject", "/tmp/myobject", cbcMaterials)
-if err != nil {
-    fmt.Println(err)
-    return
-}
-```
-
 <a name="PutObject"></a>
 ### PutObject(bucketName, objectName string, reader io.Reader, objectSize int64,opts PutObjectOptions) (n int, err error)
 当对象小于128MiB时，直接在一次PUT请求里进行上传。当大于128MiB时，根据文件的实际大小，PutObject会自动地将对象进行拆分成128MiB一块或更大一些进行上传。对象的最大大小是5TB。
@@ -475,9 +439,13 @@ __minio.PutObjectOptions__
 | `opts.ContentType` | _string_ | 对象的Content type， 例如"application/text" |
 | `opts.ContentEncoding` | _string_ | 对象的Content encoding，例如"gzip" |
 | `opts.ContentDisposition` | _string_ | 对象的Content disposition, "inline" |
+| `opts.ContentLanguage` | _string_ | 对象的Content Language,  "French" |
 | `opts.CacheControl` | _string_ | 指定针对请求和响应的缓存机制，例如"max-age=600"|
-| `opts.EncryptMaterials` | _encrypt.Materials_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/minio/minio-go/v6) |
-
+| `opts.Mode` | _*minio.RetentionMode_ | 设置保留模式, e.g "COMPLIANCE" |
+| `opts.RetainUntilDate` | _*time.Time_ | 保留模式的有效期|
+| `opts.ServerSideEncryption` | _encrypt.ServerSide_ | `encrypt`包提供的对流加密的接口，(更多信息，请看https://godoc.org/github.com/minio/minio-go/v6) |
+| `opts.StorageClass` | _string_ | 指定对象的存储类 MinIO服务器支持的值有 `REDUCED_REDUNDANCY` 和 `STANDARD` |
+| `opts.WebsiteRedirectLocation` | _string_ | 指定对象重定向到同一个桶的其他的对象或者外部的URL|
 
 __示例__
 
