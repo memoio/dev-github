@@ -19,20 +19,12 @@
 >>
 >> `api`  
 >>api使用文档  
->>> `http-api-go.md`/`http-api-go_CN.md` http api文档  
 >>> `s3-sdk-go.md`/`s3-sdk-go_CN.md` 基于minio的s3接口文档
 >>>
 >> `cmd`
 >>> 命令行相关的说明文档  
 >>> `mefs-command.md`/`mefs-command_CN.md`  
 >>>
-
-> `mefs-http-api-go`  
-> go语言api仓库
->> `Readme.md` 仓库介绍文档  
->> `Readme_CN.md` 中文版仓库介绍文档  
->> `sourcecode` 源码存放目录（如果有）  
->>
 
 
 # 外部库

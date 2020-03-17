@@ -1,6 +1,12 @@
 # MEFS 命令行操作文档
 
-### 初始化
+[TOC]
+
+## 命令详情
+
+### 启动
+
+#### 初始化
 
 mefs 初始化，默认初始化的目录为\$HOME/.mefs，可以通过 export MEFS_PATH=<localpath>的方式设置初始化的目录，然后再运行 init。
 
@@ -13,7 +19,7 @@ mefs 初始化，默认初始化的目录为\$HOME/.mefs，可以通过 export M
 - sk：私钥地址；
 - pwd：密码；
 
-### 启动实例
+#### 启动实例
 
 启动 daemon 服务
 
@@ -21,12 +27,12 @@ mefs 初始化，默认初始化的目录为\$HOME/.mefs，可以通过 export M
 > mefs daemon --pwd=<your password>
 ```
 
-### 启动用户 LFS
+#### 启动用户 LFS
 
-在启动 mefs 实例后，启动用户的存储空间。第一次启动这个地址的时候需要使用 sk 参数；若设置密码，后续再启动的时候，需要加上密码。
+在启动 mefs 实例后，user用户启动其存储空间。第一次启动这个地址的时候需要使用 sk 参数；若设置密码，后续再启动的时候，需要加上密码。
 
 ```shell
-mefs lfs start <public key> --sk=<private key> --pwd=<password> --dur=<duration> --cap=<capacity> --price=<price> --ks=<keeper SLA> --ps=<provider SLA>
+> mefs lfs start <public key> --sk=<private key> --pwd=<password> --dur=<duration> --cap=<capacity> --price=<price> --ks=<keeper SLA> --ps=<provider SLA>
 ```
 
 参数解释：
@@ -42,15 +48,13 @@ ks：keeper的数量；
 ps：provider的数量；
 ```
 
-## 使用 LFS
+### 使用 LFS（cli）
 
 mefs 为每一个用户提供了一个专属的加密存储空间（LFS），每个存储空间包含多个桶（bucket），桶是用户用于存储对象（object）的容器，每个桶包含多个对象（object），我们可以把对象想象成文件。桶的冗余策略可以在创建的时候指定（存储在该桶中的所有对象都使用该种冗余策略），对象的数据使用对称加密方式加密。
 
 user 可以通过命令行，网络（http），以及网关（gateway）的方式进行数据的操作。
 
 也可以通过 sdk 进行操作，当前提供 go 版本。
-
-### 命令行（cli）
 
 #### 桶（bucket）操作
 
@@ -59,7 +63,7 @@ user 可以通过命令行，网络（http），以及网关（gateway）的方�
 命令描述：create_bucket 根据 BucketName 名字创建桶，每个桶可以设置不同的冗余策略，冗余策略为多副本（multiple replicas）或者纠删码（Reed-Solomon Codes）,可以调整数据块和校验块的个数来决定冗余水平。默认使用 3 个数据块和 2 个校验块的纠删码，可以容忍两个块的丢失。
 
 ```shell
-mefs lfs create_bucket <BucketName> --policy=<redundancy> --dc=<data count> --pc=<parity count> --addr=<public key>
+> mefs lfs create_bucket <BucketName> --policy=<redundancy> --dc=<data count> --pc=<parity count> --addr=<public key>
 ```
 
 参数解释：
@@ -89,7 +93,7 @@ BucketName: <BucketName> // 创建的桶的名字
 命令描述：list_buckets 显示出此用户创建的所有的桶，包含每个桶的名字(BucketName)，创建时间(Ctime)，冗余策略(Policy)和冗余参数(DataCount、ParityCount)
 
 ```shell
-mefs lfs list_buckets --addr=<public key>
+> mefs lfs list_buckets --addr=<public key>
 ```
 
 参数解释：
@@ -119,7 +123,7 @@ BucketName: <BucketName>
 命令描述：若 BucketName 名字的桶存在，head_bucket 显示此桶的创建时间，冗余策略和冗余参数；若不存在，返回桶不存在。
 
 ```shell
-mefs lfs head_bucket <BucketName> --addr=<public key>
+> mefs lfs head_bucket <BucketName> --addr=<public key>
 ```
 
 参数解释：
@@ -146,7 +150,7 @@ BucketName: <BucketName>
 命令描述：若 BucketName 名字的桶存在，delete_bucket 删除此桶；若不存在，返回桶不存在。只有在桶内为空的时候才会删除，否则返回桶不为空。
 
 ```shell
-mefs lfs delete_bucket <BucketName> --addr=<public key>
+> mefs lfs delete_bucket <BucketName> --addr=<public key>
 ```
 
 参数解释：
@@ -175,7 +179,7 @@ BucketName: <BucketName>
 命令描述：put_object 向 BucketName 桶内上传一个名为 ObjectName 的对象；若桶不存在，返回桶不存在；若对象已存在，则返回对象已存在。
 
 ```shell
-mefs lfs put_object <ObjectName> <BucketName> --addr=<public key>
+> mefs lfs put_object <ObjectName> <BucketName> --addr=<public key>
 ```
 
 参数解释：
@@ -356,105 +360,6 @@ mefs lfs show_storage --addr=<public key>
 
 输出为相应的空间，格式为两位小数带单位（B）
 
-### http 操作
-
-mefs 的命令都可以使用 http 进行操作
-
-#### 配置
-
-在 mefs 启动之前，进行如下配置：
-
-```shell
-// mefs api的端口设置,默认为5001
-mefs config Addresses.API /ip4/0.0.0.0/tcp/5001
-
-// 跨域访问
-mefs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
-mefs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
-```
-
-然后重新启动 mefs 即可使用 http 方式进行操作。
-
-#### 使用
-
-一个类似于如下的命令：
-
-```shell
-mefs rootcmd subcmd <arg1> <arg2> -opname1=<op1> -opname2=<op2>
-```
-
-对应的 http 请求为：
-
-```shell
-curl  "http://<ip>:<port>/api/v0/api/v0/<rootcmd>/<subcmd>?arg=<arg1>&arg=<arg2>&opname1=<op1>&opname2=<op2>"
-```
-
-ip 为启动 mefs 的机器的网络地址，port 默认为 5001，若运行前配置了跨域访问，可以使用外网 ip 进行访问，否则只能通过 127.0.0.1 访问。
-
-#### example
-
-- 显示所有 bucket 的信息
-
-```shell
-curl  "http://127.0.0.1:5001/api/v0/lfs/list_buckets?addr=<public key>"
-```
-
-输出是标准的 json 格式
-
-```json
-{
-  "Method": "List Buckets",
-  "Buckets": [
-    {
-      "BucketName": "<BucketName>",
-      "BucketID": "<BucketID>",
-      "Ctime": "<Ctime>",
-      "Policy": "<Policy>",
-      "DataCount": "<DataCount>",
-      "ParityCount": "<ParityCount>"
-    },
-    {
-      "BucketName": "<BucketName>",
-      "BucketID": "<BucketID>",
-      "Ctime": "<Ctime>",
-      "Policy": "<Policy>",
-      "DataCount": "<DataCount>",
-      "ParityCount": "<ParityCount>"
-    }
-  ]
-}
-```
-
-- 显示某 bucket 的所有 object 的信息
-
-```shell
-curl  "http://127.0.0.1:5001/api/v0/lfs/list_objects?arg=<BucketName>&addr=<public key>"
-```
-
-输出是标准的 json 格式
-
-```json
-{
-  "Method": "List Objects",
-  "Objects": [
-    {
-      "ObjectName": "<ObjectName>",
-      "ObjectSize": "<ObjectSize>",
-      "Ctime": "<Ctime>",
-      "Dir": "<Dir>",
-      "LatestChalTime": "<LatestChalTime>"
-    },
-    {
-      "ObjectName": "<ObjectName>",
-      "ObjectSize": "<ObjectSize>",
-      "Ctime": "<Ctime>",
-      "Dir": "<Dir>",
-      "LatestChalTime": "<LatestChalTime>"
-    }
-  ]
-}
-```
-
 ### 网关模式
 
 多个用户可以共用一个 mefs 的运行程序
@@ -488,34 +393,4 @@ mefs lfs kill addr --pwd=<password>
 ```shell
 addr：用户地址
 --pwd：用户密码
-```
-
-#### 使用
-
-- cli
-
-```shell
-mefs rootcmd subcmd arg1 op1=arg2 --addr=<public key>
-```
-
-- http
-
-```shell
-curl  "http://<ip>:5001/api/v0/api/v0/<roocmd>/<subcmd>?arg=<arg1>&op1=<arg2>&addr=<public key>"
-```
-
-#### example
-
-地址为 public key 的用户从 BucketName 桶内获取 ObjectName 名字的文件
-
-- cli
-
-```shell
-mefs lfs get_object <BucketName> <ObjectName> --addr=<public key>
-```
-
-- http
-
-```shell
-curl  "http://127.0.0.1:5001/api/v0/lfs/get_object?arg=<BucketName>&arg=<ObjectName>&addr=<public key>"
 ```
