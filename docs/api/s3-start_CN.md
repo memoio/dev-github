@@ -29,6 +29,7 @@ go get -u github.com/minio/minio-go
 mefs daemon
 ```
 再开启一个终端，启动lfs
+
 ```sh
 mefs lfs start
 mefs gateway start
@@ -37,12 +38,12 @@ mefs gateway start
 ## 初始化MinIO Client
 MinIO client需要以下4个参数来连接与Amazon S3兼容的对象存储。
 
-| 参数  | 描述| 
-| :---         |     :---     |
-| endpoint   | MEFS服务的endpoint   |
-| accessKeyID | MEFS账户的地址 |
-| secretAccessKey | MEFS账户密码 |
-| secure | true代表使用HTTPS |
+| 参数            | 描述               |
+| :-------------- | :----------------- |
+| endpoint        | MEFS服务的endpoint |
+| accessKeyID     | MEFS账户的地址     |
+| secretAccessKey | MEFS账户密码       |
+| secure          | true代表使用HTTPS  |
 
 
 ```go
