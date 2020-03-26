@@ -31,7 +31,7 @@ docker 环境，外网 ip，4001 端口开放
 
 ```docker
 // 启动docker; 4001用于网络连接
-> sudo docker run -itd -v <local datadir>:/root --name <container Name> -p 4001:4001 memoio/mefs-user:latest
+> sudo docker run -itd -v <local datadir>:/root --name <container Name> -p 4001:4001 memoio/mefs-provider:latest
 ```
 
 - 进入终端
