@@ -14,8 +14,9 @@ docker 环境
 
 将 docker 镜像 pull 下来
 
-```shell
-> docker pull memoio/mefs-user
+```docker
+// 获取
+> sudo docker pull memoio/mefs-user:latest
 ```
 
 ## 启动 docker
@@ -23,31 +24,41 @@ docker 环境
 - 启动 docker
 
 ```shell
-> docker run -itd -v <your local path>:/root/.mefs -p 5001:5001 memoio/mefs-provider
+// 启动docker; 4001用于网络连接，5080用于S3接口
+> sudo docker run -itd -v <local datadir>:/root --name <container Name>  -p 4001:4001 -p 5080:5080 memoio/mefs-user:latest
 ```
 
 - 进入终端
 
 ```shell
-> docker exec -it 9d304 bash
+> sudo docker exec -it <container Name> bash
 ```
 
-- 运行 mefs lfs，检查是否安装成功
+- 运行 check_user.sh，检查是否安装成功
+
+```shell
+/usr/local/bin/check_user.sh
+```
 
 ## 启动 mefs
 
 每个命令的参数解释见[使用文档](https://github.com/memoio/docs)
 
-- mefs 初始化
+### user 初始化
 
 ```shell
-> mefs init --netKey=testnet --sk=<your private key> --pwd=<your password>
+> mefs-user init --netKey=testnet --sk=<your private key> --pwd=<your password>
 ```
 
-- 启动 mefs 的实例，可后台运行
+参数解释：
+
+- sk：私钥;
+- pwd：密码，存储 keyfile;默认为"memoriae"
+
+### 启动 mefs 的实例，可后台运行
 
 ```shell
-> mefs daemon --netKey=testnet --pwd=<your password> >> log 2>&1 &
+> mefs-user daemon --netKey=testnet --pwd=<your password> >> log 2>&1 &
 ```
 
 ### 用户空间 lfs 的使用
@@ -57,7 +68,7 @@ docker 环境
 启动期间由于需要匹配合约，部署合约，耗时约 10~20 分钟
 
 ```shell
-> mefs lfs start --pwd=<your password> --dur=<desired storage duration> --cap=<desired storage capacity> --price=<desired storage price> --ks=<desired keeper count> --ps=<desired provider count>
+> mefs-user lfs start --pwd=<your password> --dur=<desired storage duration> --cap=<desired storage capacity> --price=<desired storage price> --ks=<desired keeper count> --ps=<desired provider count>
 ```
 
 参数解释：
@@ -73,7 +84,7 @@ docker 环境
 可以在该用户的加密存储空间 lfs 中新建 bucket。
 
 ```shell
-> mefs lfs create_bucket bucket01 --pl=<redundance policy> --dc=<data count> --pc=<parity count>
+> mefs-user lfs create_bucket bucket01 --pl=<redundance policy> --dc=<data count> --pc=<parity count>
 ```
 
 参数解释：
@@ -85,21 +96,28 @@ docker 环境
 #### 上传测试文件
 
 ```shell
-> mefs lfs put_object /localpath/test.dat bucket01
+> mefs-user lfs put_object /localpath/test.dat bucket01
 ```
 
 #### 下载文件，检验 md5 值是否正确
 
 ```shell
-> mefs lfs get_object bucket01 test.dat
+> mefs-user lfs get_object bucket01 test.dat
 ```
 
 #### 查看 lfs 空间的信息
 
 ```shell
-> mefs lfs show_storage
+> mefs-user lfs show_storage
 ```
 
-## 3. HTTP-Client 使用
+## S3 接口使用
 
-go 接口[mefs-http-api-go](https://github.com/memoio/mefs-http-api-go)
+### 启动 gateway
+
+```shell
+// 端口为5080
+> mefs-user gateway start
+```
+
+s3 使用见文档
