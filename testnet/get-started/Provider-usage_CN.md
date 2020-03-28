@@ -27,7 +27,7 @@ docker 环境，外网 ip，4001 端口开放
 
 - 启动 docker
 
-要求：机器的 4001 端口可以被公网访问；或者在出口机器上有端口映射
+要求：机器的 4001 端口可以被公网访问，或者在出口机器上有端口映射
 
 ```docker
 // 启动docker; 4001用于网络连接
@@ -62,11 +62,20 @@ docker 环境，外网 ip，4001 端口开放
 - sk：私钥;
 - pwd：密码，存储 keyfile;默认为"memoriae"
 
+### 修改端口
+
+修改默认的 4001 端口为<port num>，执行如下命令；要求此 port num 可以被直接访问，或者在外网机器上有端口映射。
+
+````shell
+// 运行daemon前执行
+mefs-provider config --json Addresses.Swarm "[\"/ip4/0.0.0.0/tcp/<port num>\"]"
+```
+
 ### 启动 mefs 的实例，可后台运行
 
 ```shell
 > mefs-provider daemon --netKey=testnet --pwd=<your password> --dur=<your storage duration> --cap=<your storage capacity> --price=<your storage price> --deCap=<your deposit capacity> --rdo=<bool> --pos=true
-```
+````
 
 参数解释：
 

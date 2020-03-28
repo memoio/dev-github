@@ -55,6 +55,15 @@ docker 环境
 - sk：私钥;
 - pwd：密码，存储 keyfile;默认为"memoriae"
 
+### 修改端口
+
+修改默认的 4001 端口为<port num>，执行如下命令
+
+````shell
+// 运行daemon前执行
+mefs-user config --json Addresses.Swarm "[\"/ip4/0.0.0.0/tcp/<port num>\"]"
+```
+
 ### 启动 mefs 的实例，可后台运行
 
 ```shell
@@ -121,3 +130,4 @@ docker 环境
 ```
 
 s3 使用见文档
+````
