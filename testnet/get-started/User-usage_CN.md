@@ -99,7 +99,7 @@ mefs-user config --json Addresses.Swarm "[\"/ip4/0.0.0.0/tcp/<port num>\"]"
 参数解释：
 
 - pl：数据冗余策略，1 为 RS 码， 2 为多副本，默认是 1；
-- dc：数据块个数，默认为 3；
+- dc：数据块个数，默认为 3；dc+pc 不能大于 provider 的数目；
 - pc：冗余块个数，默认为 2；
 
 #### 上传测试文件
