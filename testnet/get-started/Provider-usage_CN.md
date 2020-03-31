@@ -41,10 +41,10 @@ docker 环境，外网 ip，4001 端口开放
 > sudo docker exec -it <container Name> bash
 ```
 
-- 运行 check_provider.sh，检查是否安装成功
+- 运行 check_provider_mcl.sh，检查是否安装成功；由于指令集的差异，这里可能会重新编译一些动态库。
 
 ```shell
-/usr/local/bin/check_provider.sh
+/usr/local/bin/check_provider_mcl.sh
 ```
 
 ## 启动 mefs

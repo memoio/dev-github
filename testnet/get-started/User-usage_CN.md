@@ -34,10 +34,10 @@ docker 环境
 > sudo docker exec -it <container Name> bash
 ```
 
-- 运行 check_user.sh，检查是否安装成功
+- 运行 check_user_mcl.sh，检查是否安装成功
 
 ```shell
-/usr/local/bin/check_user.sh
+/usr/local/bin/check_user_mcl.sh
 ```
 
 ## 启动 mefs
