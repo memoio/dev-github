@@ -46,6 +46,9 @@ sudo docker run -d --stop-timeout 30 \
 - storage dir：数据目录；
 - keystore dir：keyfile 所在的位置，keyfile 的名字为 WALLET
 
+日志文件：
+<storage dir>/.mefs 下 启动日志 daemon.stdout.xx 以及 logs 目录内的运行日志
+
 ## 进入终端
 
 ```shell
