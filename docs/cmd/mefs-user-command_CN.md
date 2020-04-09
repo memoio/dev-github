@@ -8,45 +8,67 @@
 
 #### 初始化
 
-mefs 初始化，默认初始化的目录为\$HOME/.mefs，可以通过 export MEFS_PATH=<localpath>的方式设置初始化的目录，然后再运行 init。
+mefs 初始化，默认初始化的目录为\$HOME/.mefs，可以通过 export MEFS_PATH=<local dir>的方式设置初始化的目录，然后再运行 init。
 
 ```shell
-> mefs init --sk=<your private key> --pwd=<your password>
+> mefs-user init --netKey=<net key> --sk=<your private key> --pwd=<your password> --keyfile=<absolute path of your keyfile>
 ```
 
 参数解释：
 
 - sk：私钥地址；
 - pwd：密码；
+- keyfile: keyfile 文件的完整路径；
+- netKey: 私有网络标志，现在有 dev 和 testnet；同一个标志的网络可以互联。
+
+#### 修改网络传输端口
+
+默认为 4001 端口，若需要改为<port num>，执行如下命令；
+
+```shell
+// 运行daemon前执行
+mefs-user config --json Addresses.Swarm "[\"/ip4/0.0.0.0/tcp/<port num>\"]"
+```
+
+例如改为 4090 端口：
+
+```shell
+// 运行daemon前执行
+mefs-user config --json Addresses.Swarm "[\"/ip4/0.0.0.0/tcp/4090\"]"
+```
 
 #### 启动实例
 
-启动 daemon 服务
-
 ```shell
-> mefs daemon --pwd=<your password>
-```
-
-#### 启动用户 LFS
-
-在启动 mefs 实例后，user用户启动其存储空间。第一次启动这个地址的时候需要使用 sk 参数；若设置密码，后续再启动的时候，需要加上密码。
-
-```shell
-> mefs lfs start <public key> --sk=<private key> --pwd=<password> --dur=<duration> --cap=<capacity> --price=<price> --ks=<keeper SLA> --ps=<provider SLA>
+// 以后台方式运行
+> mefs-user daemon --netKey=<net key> --pwd=<your password> >> log 2>&1 &
 ```
 
 参数解释：
 
+- pwd：密码；
+- netKey: 私有网络标志，现在有 dev 和 testnet
+
+#### 启动用户 LFS
+
+在启动 mefs 实例后，user 用户启动其存储空间。第一次启动这个地址的时候需要使用 sk 参数；若设置密码，后续再启动的时候，需要加上密码。
+
+启动期间由于需要匹配合约，部署合约，耗时约 10~20 分钟
+
 ```shell
-public key：用户地址；为空时，启动本地用户；
-sk：私钥地址； 在有私钥地址的时候，以私钥地址为准；
-pwd：密码；
-dur：存储的时间长度，默认是100天；
-cap：存储的容量，默认是1000MB；
-price：存储的价格；
-ks：keeper的数量；
-ps：provider的数量；
+> mefs lfs start <public address> --sk=<private key> --pwd=<password> --dur=<duration> --cap=<capacity> --price=<price> --ks=<keeper SLA> --ps=<provider SLA>
 ```
+
+参数解释：
+
+- public address：用户地址（0x...）；为空时，启动本地用户；
+- sk：私钥地址； 在有私钥地址的时候，以私钥地址为准；
+- pwd：密码；
+- dur：提供的存储时间长度；按天计算， 默认是 100；
+- cap：提供的存储大小；按 MB 计算，默认是 1000；
+- price：提供的存储价格，按 wei 计算，默认是 400000000000；即 3 美元/(TB\*月)；
+- ks：需要的 keeper 的数目，默认是 2；
+- ps：需要的 provider 的数目，默认是 6；
 
 ### 使用 LFS（cli）
 
@@ -393,4 +415,8 @@ mefs lfs kill addr --pwd=<password>
 ```shell
 addr：用户地址
 --pwd：用户密码
+```
+
+```
+
 ```

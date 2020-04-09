@@ -1,50 +1,44 @@
-# 基于MinIO的MEFS Go SDK
+# 基于 MinIO 的 MEFS Go SDK
 
-MinIO Go Client SDK提供了简单的API来访问任何与Amazon S3兼容的对象存储服务。MEFS提供了基于MinIO的SDK。
+MinIO Go Client SDK 提供了简单的 API 来访问任何与 Amazon S3 兼容的对象存储服务。MEFS 提供了基于 MinIO 的 SDK。
 
-**支持的云存储:** 
+**支持的云存储:**
 
 - AWS Signature Version 4
-   - Amazon S3
-   - MinIO
+
+  - Amazon S3
+  - MinIO
 
 - AWS Signature Version 2
-   - Google Cloud Storage (兼容模式)
-   - Openstack Swift + Swift3 middleware
-   - Ceph Object Gateway
-   - Riak CS
+  - Google Cloud Storage (兼容模式)
+  - Openstack Swift + Swift3 middleware
+  - Ceph Object Gateway
+  - Riak CS
 
-本文我们将学习如何安装MinIO client SDK，连接到MinIO，并提供一下文件上传的示例。对于完整的API以及示例，请参考[s3-sdk-go](/docs/api/s3-sdk-go.md)。
+本文我们将学习如何安装 MinIO client SDK，连接到 MinIO，并提供一下文件上传的示例。对于完整的 API 以及示例，请参考[s3-sdk-go](/docs/api/s3-sdk-go.md)。
 
-本文假设你已经有 [Go开发环境](https://golang.org/doc/install) 以及 [MEFS](***代码位置或者二进制文件下载位置)、[MEFS账号](***加入MEFS网络教程)
+本文假设你已经有 [Go 开发环境](https://golang.org/doc/install) 以及 [MEFS](***代码位置或者二进制文件下载位置)、[MEFS 账号](***加入MEFS网络教程)
 
-## 从Github下载
+## 从 Github 下载
+
 ```sh
 go get -u github.com/minio/minio-go
 ```
 
-## 运行MEFS
-开启一个终端，运行MEFS daemon
-```sh
-mefs daemon
-```
-再开启一个终端，启动lfs
+## 运行 MEFS
 
-```sh
-mefs lfs start
-mefs gateway start
-```
+mefs-user 的 lfs 服务启动， 以及 gateway 启动
 
-## 初始化MinIO Client
-MinIO client需要以下4个参数来连接与Amazon S3兼容的对象存储。
+## 初始化 MinIO Client
 
-| 参数            | 描述               |
-| :-------------- | :----------------- |
-| endpoint        | MEFS服务的endpoint |
-| accessKeyID     | MEFS账户的地址     |
-| secretAccessKey | MEFS账户密码       |
-| secure          | true代表使用HTTPS  |
+MinIO client 需要以下 4 个参数来连接与 Amazon S3 兼容的对象存储。
 
+| 参数            | 描述                 |
+| :-------------- | :------------------- |
+| endpoint        | MEFS 服务的 endpoint |
+| accessKeyID     | MEFS 账户的地址      |
+| secretAccessKey | MEFS 账户密码        |
+| secure          | true 代表使用 HTTPS  |
 
 ```go
 package main
@@ -70,9 +64,12 @@ func main() {
 }
 ```
 
-## API文档
-完整的API文档在这里。
-* [完整API文档](/docs/api/s3-sdk-go.md)
+## API 文档
+
+完整的 API 文档在这里。
+
+- [完整 API 文档](/docs/api/s3-sdk-go.md)
 
 ## 了解更多
-* [完整文档](/docs/README.md)
+
+- [完整文档](/docs/README.md)
