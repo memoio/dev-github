@@ -37,7 +37,7 @@ sudo docker run -it --stop-timeout 30 \
     -e WALLET="0x..." \
     -e PASSWORD="<your password>" \
     -e STORAGESIZE="1TB" \
-    -e POSENABLE="false"
+    -e POSENABLE="false" \
     --mount type=bind,source="<keystore dir>",destination=/app/keystore \
     --name <container name> memoio/mefs-provider:latest
 ```
