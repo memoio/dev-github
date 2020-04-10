@@ -49,10 +49,11 @@ sudo docker run -it --stop-timeout 30 \
 - STORAGESIZE：提供的存储空间大小，例如 10GB，1000MB，1TB 等；默认为 1TB；
 - POSENABLE：是否启用冷数据填充功能，设置 true 开启；默认为 false；
 - storage dir：数据目录；
-- keystore dir：注册后导出的 keyfile 所在的位置，keyfile 的名字为 WALLET
+- keystore dir：注册后导出的 keyfile 所在的位置，keyfile 的名字为 <WALLET>；
 
 日志文件：
-<storage dir>/.mefs 下 启动日志 daemon.stdout.xx 以及 logs 目录内的运行日志
+<storage dir>/.mefs 下 启动日志 daemon.stdout.xx 以及 logs 目录内的运行日志；
+在运行时，可以查看运行日志；运行出错的时候，可以查看启动日志。
 
 ## 进入终端
 

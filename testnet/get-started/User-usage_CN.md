@@ -46,10 +46,11 @@ sudo docker run -d --stop-timeout 30 \
 - STORAGESIZE：使用的存储空间大小，例如 10GB，1000MB，1TB 等；默认为 100GB；
 - GATEWAY：是否开启 gateway 模式，开启后，5080 端口对外提供 minio S3 接口服务；用户名为 WALLET，密码为 PASSWORD；默认开启；
 - storage dir：数据目录；
-- keystore dir：注册后导出的 keyfile 所在的位置，keyfile 的名字为 WALLET
+- keystore dir：注册后导出的 keyfile 所在的位置，keyfile 的名字为 <WALLET>；
 
 日志文件：
-<storage dir>/.mefs 下 启动日志 daemon.stdout.xx 以及 logs 目录内的运行日志
+<storage dir>/.mefs 下 启动日志 daemon.stdout.xx 以及 logs 目录内的运行日志；
+在运行时，可以查看运行日志；运行出错的时候，可以查看启动日志。
 
 ## 进入终端
 
