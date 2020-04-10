@@ -32,8 +32,9 @@ docker 环境，外网 ip，4001 端口开放
 ```docker
 // 启动docker; 4001用于网络连接
 sudo docker run -it --stop-timeout 30 \
-    -p 4001:4001 \
+    -p <External Port Num>:<Port Num> \
     -v <storage dir>:/root \
+    -e TRANSPORT=<Port Num>
     -e WALLET="0x..." \
     -e PASSWORD="<your password>" \
     -e STORAGESIZE="1TB" \
@@ -44,12 +45,13 @@ sudo docker run -it --stop-timeout 30 \
 
 参数解释：
 
+- TRANSPORT：<Port Num>为程序的网络端口，默认为 4001；<External Port Num>为 docker 映射出去的端口，默认可以与<Port Num>相同；
 - WALLET：用户地址（0x...）；require；
 - PASSWORD: keyfile 的密码，若是以 docker 后台方式运行，必要；以前台方式运行，可以在运行过程中输入；
 - STORAGESIZE：提供的存储空间大小，例如 10GB，1000MB，1TB 等；默认为 1TB；
 - POSENABLE：是否启用冷数据填充功能，设置 true 开启；默认为 false；
 - storage dir：数据目录；
-- keystore dir：注册后导出的 keyfile 所在的位置，keyfile 的名字为 <WALLET>；
+- keystore dir：注册后导出的 keyfile 所在的位置，keyfile 的名字包含 <WALLET>；
 
 日志文件：
 <storage dir>/.mefs 下 启动日志 daemon.stdout.xx 以及 logs 目录内的运行日志；
