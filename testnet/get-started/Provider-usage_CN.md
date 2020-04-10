@@ -31,7 +31,7 @@ docker 环境，外网 ip，4001 端口开放
 
 ```docker
 // 启动docker; 4001用于网络连接
-sudo docker run -it --stop-timeout 30 \
+sudo docker run -d --stop-timeout 30 \
     -p <External Port Num>:<Port Num> \
     -v <storage dir>:/root \
     -e TRANSPORT=<Port Num>
