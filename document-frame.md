@@ -1,16 +1,17 @@
 # 框架
 > `testnet`  
 > 测试网仓库，存放测试网相关说明，今后可能存放测试网源码  
->> `Readme.md`  仓库介绍文档 包括测试网介绍、项目进展、相关说明文档链接  
->> `Readme_CN.md` 中文版仓库介绍  
->> `Q&A.md` 一些问题的解答  
->> `sourcecode` 源码存放目录（如果有）
->>  
->> `get-started`  testnet 的使用说明
->>> `How-to-install.md`/`How-to-install_CN.md`  安装教程  
->>> `keeper-usage.md`/`keeper-usage_CN.md`  keeper使用教程  
->>> `provider-usage.md`/`provider-usage_CN.md`  provider使用教程  
->>> `user-usage.md`/`user-usage_CN.md`  user使用教程  
+>
+> > `Readme.md`  仓库介绍文档 包括测试网介绍、项目进展、相关说明文档链接  
+> > `Readme_CN.md` 中文版仓库介绍  
+> > `Q&A.md` 一些问题的解答  
+> > `sourcecode` 源码存放目录（如果有）
+> >  
+> > `get-started`   目录说明
+> >
+> >> `keeper-usage.md`/`keeper-usage_CN.md`  keeper使用教程  
+> >> `provider-usage.md`/`provider-usage_CN.md`  provider使用教程  
+> >> `user-usage.md`/`user-usage_CN.md`  user使用教程  
 
 > `doc`  
 > 项目文档仓库
