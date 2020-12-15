@@ -51,23 +51,23 @@ mefs-user config --json Addresses.Swarm "[\"/ip4/0.0.0.0/tcp/4090\"]"
 
 #### 启动用户 LFS
 
-在启动 mefs 实例后，user 用户启动其存储空间。第一次启动这个地址的时候需要使用 sk 参数；若设置密码，后续再启动的时候，需要加上密码。
+在启动 mefs 实例后，user 用户启动其存储空间。
 
-启动期间由于需要匹配合约，部署合约，耗时约 10~20 分钟
+启动期间由于需要匹配合约，部署合约，耗时约30分钟
 
 ```shell
-> mefs lfs start <public address> --sk=<private key> --pwd=<password> --dur=<duration> --cap=<capacity> --price=<price> --ks=<keeper SLA> --ps=<provider SLA>
+> mefs-user lfs start <public address> --sk=<private key> --pwd=<password> --dur=<duration> --cap=<capacity> --price=<price> --ks=<keeper SLA> --ps=<provider SLA>
 ```
 
 参数解释：
 
-- public address：用户地址（0x...）；为空时，启动本地用户；
-- sk：私钥地址； 在有私钥地址的时候，以私钥地址为准；
-- pwd：密码；
+- public address：用户地址（0x...）；默认启动本地用户；
+- sk：私钥地址； 默认从本地私钥文件导入；
+- pwd：密码；默认使用默认密码；
 - dur：提供的存储时间长度；按天计算， 默认是 100；
-- cap：提供的存储大小；按 MB 计算，默认是 1000；
-- price：提供的存储价格，按 wei 计算，默认是 400000000000；即 3 美元/(TB\*月)；
-- ks：需要的 keeper 的数目，默认是 2；
+- cap：提供的存储大小；按 MB 计算，默认是 1TB；
+- price：提供的存储价格，按 weiDollar/MB/hour 计算，默认是 4 * 10^9；约为 3 美元/(TB\*月)；
+- ks：需要的 keeper 的数目，默认是 3；
 - ps：需要的 provider 的数目，默认是 6；
 
 ### 使用 LFS（cli）
@@ -85,7 +85,7 @@ user 可以通过命令行，网络（http），以及网关（gateway）的方�
 命令描述：create_bucket 根据 BucketName 名字创建桶，每个桶可以设置不同的冗余策略，冗余策略为多副本（multiple replicas）或者纠删码（Reed-Solomon Codes）,可以调整数据块和校验块的个数来决定冗余水平。默认使用 3 个数据块和 2 个校验块的纠删码，可以容忍两个块的丢失。
 
 ```shell
-> mefs lfs create_bucket <BucketName> --policy=<redundancy> --dc=<data count> --pc=<parity count> --addr=<public key>
+> mefs-user lfs create_bucket <BucketName> --policy=<redundancy> --dc=<data count> --pc=<parity count> --addr=<public key>
 ```
 
 参数解释：
@@ -115,7 +115,7 @@ BucketName: <BucketName> // 创建的桶的名字
 命令描述：list_buckets 显示出此用户创建的所有的桶，包含每个桶的名字(BucketName)，创建时间(Ctime)，冗余策略(Policy)和冗余参数(DataCount、ParityCount)
 
 ```shell
-> mefs lfs list_buckets --addr=<public key>
+> mefs-user lfs list_buckets --addr=<public key>
 ```
 
 参数解释：
@@ -145,7 +145,7 @@ BucketName: <BucketName>
 命令描述：若 BucketName 名字的桶存在，head_bucket 显示此桶的创建时间，冗余策略和冗余参数；若不存在，返回桶不存在。
 
 ```shell
-> mefs lfs head_bucket <BucketName> --addr=<public key>
+> mefs-user lfs head_bucket <BucketName> --addr=<public key>
 ```
 
 参数解释：
@@ -172,7 +172,7 @@ BucketName: <BucketName>
 命令描述：若 BucketName 名字的桶存在，delete_bucket 删除此桶；若不存在，返回桶不存在。只有在桶内为空的时候才会删除，否则返回桶不为空。
 
 ```shell
-> mefs lfs delete_bucket <BucketName> --addr=<public key>
+> mefs-user lfs delete_bucket <BucketName> --addr=<public key>
 ```
 
 参数解释：
@@ -201,7 +201,7 @@ BucketName: <BucketName>
 命令描述：put_object 向 BucketName 桶内上传一个名为 ObjectName 的对象；若桶不存在，返回桶不存在；若对象已存在，则返回对象已存在。
 
 ```shell
-> mefs lfs put_object <ObjectName> <BucketName> --addr=<public key>
+> mefs-user lfs put_object <ObjectName> <BucketName> --addr=<public key>
 ```
 
 参数解释：
@@ -229,7 +229,7 @@ ObjectName: <ObjectName>  // 对象的名字
 命令描述：get_object 从 BucketName 桶内下载一个名为 ObjectName 的对象；若桶不存在，返回桶不存在；若对象不存在，则返回对象不存在。
 
 ```shell
-mefs lfs get_object <BucketName> <ObjectName> --o=<OutputName> --addr=<public key>
+mefs-user lfs get_object <BucketName> <ObjectName> --o=<OutputName> --addr=<public key>
 ```
 
 参数解释：
@@ -250,7 +250,7 @@ BucketName：桶的名字；
 命令描述：list_objects 列出 BucketName 桶内所有的对象，包括对象大小，创建时间，MD5 值，是否是目录，最近被挑战的时间。
 
 ```shell
-mefs lfs list_objects <BucketName> --addr=<public key>
+mefs-user lfs list_objects <BucketName> --addr=<public key>
 ```
 
 参数解释：
@@ -282,7 +282,7 @@ ObjectName: <ObjectName>
 命令描述：head_object 显示 BucketName 桶内 ObjectName 对象的大小，MD5 值，创建时间，是否为目录，最近被挑战的时间；
 
 ```shell
-mefs lfs head_object <BucketName> <ObjectName> --addr=<public key>
+mefs-user lfs head_object <BucketName> <ObjectName> --addr=<public key>
 ```
 
 参数解释：
@@ -310,7 +310,7 @@ ObjectName: <ObjectName>
 命令描述：delete_object 从 BucketName 桶内删除 ObjectName 对象。
 
 ```shell
- mefs lfs delete_object <BucketName> <ObjectName> --addr=<public key>
+ mefs-user lfs delete_object <BucketName> <ObjectName> --addr=<public key>
 ```
 
 参数解释：
@@ -339,7 +339,7 @@ ObjectName: <ObjectName>
 命令描述：list_keepers 列出与此 user 签署 UpKeeping 合约的 keeper
 
 ```shell
-mefs lfs list_keepers
+mefs-user lfs list_keepers
 ```
 
 输出为对应的 keeper id
@@ -349,7 +349,7 @@ mefs lfs list_keepers
 命令描述：list_providers 列出给此 user 存储数据的 provider
 
 ```shell
-mefs lfs list_providers
+mefs-user lfs list_providers
 ```
 
 输出为对应的 provider id
@@ -361,7 +361,7 @@ mefs lfs list_providers
 命令描述：fsync 手动刷新 lfs 的元数据，此命令在 keeper 上执行。元数据包括 SuperBlock、BucketInfo、ObjectInfo
 
 ```shell
-mefs lfs fsync
+mefs-user lfs fsync
 ```
 
 输出为 Flush Success
@@ -371,7 +371,7 @@ mefs lfs fsync
 命令描述：show_storage 查询用户的使用空间，即用户的所有 bucket 中共存储了多少数据，单位是 kb
 
 ```shell
-mefs lfs show_storage --addr=<public key>
+mefs-user lfs show_storage --addr=<public key>
 ```
 
 参数解释：
@@ -380,7 +380,7 @@ mefs lfs show_storage --addr=<public key>
 --addr: user的地址，默认为空，表示用户为本地节点地址
 ```
 
-输出为相应的空间，格式为两位小数带单位（B）
+输出为相应的空间，格式为两位小数带单位（kb）
 
 ### 网关模式
 
@@ -391,7 +391,7 @@ mefs lfs show_storage --addr=<public key>
 在启动 mefs 后，也可以代理启动其他的用户。
 
 ```shell
-mefs lfs start <addr> --sk=<private key> --pwd=<password>
+mefs-user lfs start <addr> --sk=<private key> --pwd=<password>
 ```
 
 参数解释：
@@ -407,7 +407,7 @@ addr：用户地址;
 在启动 mefs 后，也可以代理关闭其他的用户。
 
 ```go
-mefs lfs kill addr --pwd=<password>
+mefs-user lfs kill addr --pwd=<password>
 ```
 
 参数解释：
@@ -417,6 +417,3 @@ addr：用户地址
 --pwd：用户密码
 ```
 
-```
-
-```
