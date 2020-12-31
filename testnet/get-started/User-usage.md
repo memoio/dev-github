@@ -77,6 +77,6 @@ Through the running log, you can view the running status of the keeper node; whe
 > sudo docker exec -it <container name> bash
 ```
 
-* For the use of cli, see the [command document](https://github.com/memoio/docs/cmd).
-* S3 interface usage see [S3 document](https://github.com/memoio/docs/api).
+* For the use of cli, see the [command document](http://132.232.87.203:8088/508dev/dev-github/tree/master/docs/cmd).
+* S3 interface usage see [S3 document](http://132.232.87.203:8088/508dev/dev-github/tree/master/docs/api).
 

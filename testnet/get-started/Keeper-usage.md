@@ -79,4 +79,4 @@ Through the running log, you can view the running status of the keeper node; whe
 > sudo docker exec -it <container name> bash
 ```
 
-The parameter explanation of each command can be found in the [documentation](https://github.com/memoio/docs/cmd).
+The parameter explanation of each command can be found in the [documentation](http://132.232.87.203:8088/508dev/dev-github/tree/master/docs/cmd).

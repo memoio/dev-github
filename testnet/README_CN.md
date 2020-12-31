@@ -1,7 +1,7 @@
 # MEFS 测试网
 
 这是 MEFS 测试网的仓库，以下将说明如何加入 MEFS 测试网。  
-MEFS 测试网的更新动态也会在这里说明
+MEFS 测试网的更新动态也会在这里说明。
 
 ## 入门指南
 
@@ -41,6 +41,7 @@ v0.3.2
 - user 数据的修复；
 - 存储订单的时空支付；
 - 用户时空支付延迟发放；
+- 保存用户的元数据；
 
 #### 新增
 
@@ -66,10 +67,10 @@ v0.3.2
 
 - 质押空间；
 - pos 数据量的验证；
-
 - 退出前的数据迁移；
+- 收益展示；
 
 ## 现有资源
 
-- 源码：https://github.com/memoio/testnet
+- 源码：https://github.com/memoio/testnet （源码暂未公开）
 - 文档：https://github.com/memoio/docs

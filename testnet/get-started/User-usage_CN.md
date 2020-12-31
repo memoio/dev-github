@@ -76,6 +76,6 @@ sudo docker run -d --stop-timeout 30 \
 > sudo docker exec -it <container name> bash
 ```
 
-- cli 方式使用见[命令文档](https://github.com/memoio/docs/cmd)
+- cli 方式使用见[命令文档](http://132.232.87.203:8088/508dev/dev-github/tree/master/docs/cmd)
 
-- S3 接口使用见[S3文档](https://github.com/memoio/docs/api)
+- S3 接口使用见[S3文档](http://132.232.87.203:8088/508dev/dev-github/tree/master/docs/api)
