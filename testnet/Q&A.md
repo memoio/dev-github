@@ -2,155 +2,122 @@
 
 ## common
 
-- 账户和私钥是什么？
+#### What are the account and private key?
 
-```
-mefs使用的私钥与账户地址和以太坊一样，格式为0x...；
-```
+> The private key and account address used by mefs is the same as the Ethereum, and the format is 0x...;
 
-- 角色是什么？
+#### What is the role?
 
-```
-mefs包含3种角色，role，keeper，provider；目前每个账户地址对应一种角色，
-在启动的时候根据合约中的角色类型，启动不同的服务。
-```
+> Mefs contains 3 roles: user, keeper, and provider; currently each account address corresponds to a role;
+> During startup, different services are started according to the role type in the contract.
 
-- 账户地址和网络地址
+#### Account address and network address
 
-```
-启动mefs后会有两个地址：账户地址和网络地址；账户地址格式为0x...，网络地址格式为8M...；
-这两个地址实际上是等价的，一个用于和链交互，一个用于网络连接。
-```
+> After starting mefs, there will be two addresses: account address and network address; the account address format is 0x..., the network address format is 8M...;
+> These two addresses are actually equivalent, one for interacting with the chain, and one for network connection.
 
-- 如何查看自己的余额？
+#### How to check my balance?
 
-```
-在命令行中运行 mefs-user/keeper/provider test showBalance 可以查看运行账户的余额，单位为wei；
-```
+> Run `mefs-user/keeper/provider test showBalance` in the command line to view the balance of the running account, the unit is wei;
 
-- mefs 目录在哪里？包含哪些内容
+#### Where is the mefs directory? What's included?
 
-```
-`mefs-user/keeper/provider init`会根据MEFS_PATH变量，在相应的目录下创建config，data，datastore，keystore等目录和文件。
-已经初始化的目录，再次运行`mefs init`会有报错信息进行提示；
+> `mefs-user/keeper/provider init` will create config, data, datastore, keystore and other directories and files in the corresponding directories according to the MEFS_PATH variable;
+>
+> For the directory that has been initialized, if you run `mefs-user/keeper/provider init` again, an error message will prompt you;
+>
+> If you want to modify the directory, set MEFS_PATH before running `mefs-user/keeper/provider init`;
+>
+> The Keystore uses a password to store the private key;
+> Data directory stores the content of the data block, and the user's data is finally stored in the Data directory in the form of data blocks;
 
-如果想修改目录，在`mefs init`运行前设置MEFS_PATH即可；
+#### How to check the local account address?
 
-keystore使用密码存储私钥；
-data存储数据块的内容，用户的数据最终是以数据块的方式存放在data目录；
-```
+> Run `mefs-user/keeper/provider id` to see the local account address 0x...
 
-- 如看查看本地的账户地址？
+#### How to check the version of mefs?
 
-```
-运行`mefs-user/keeper/provider id`可以看到本地的账户地址0x...
-```
+> Run `mefs-user/keeper/provider version to see the version number of mefs
 
-- 如看查看 mefs 的版本
+#### How can I check my role?
 
-```
-运行`mefs-user/keeper/provider id`可以看到mefs的版本号
-```
+> During the startup process of mefs daemon, you can view the output prompt information;
+> You can also run `mefs-user/keeper/provider test localinfo` to view your own role during operation.
 
-- 如何查看自己的角色？
+## User
 
-```
-在mefs daemon的启动过程中，可以查看输出的提示信息；
-也可以在运行过程中，运行`mefs-user/keeper/provider test localinfo`查看自己的角色。
-```
+#### What is the LFS function of user?
 
-## user
+> Mefs provides users with an encrypted file system LFS, which supports bucket and object operations
 
-- user 的 LFS 功能是什么？
+#### user 的 LFS 如何启动？
 
-```
-mefs 为user提供了一个加密的文件系统LFS，支持bucket和object操作
-```
+> After confirming that `mefs-user daemon` is running, and the running role is user, run `mefs-user lfs start`;
+>
+> When the return value is returned, there will be information about the success or failure of the startup. The initial startup process includes the entire network query and contract signing, so the startup time is relatively long.
+>
+> When the user starts lfs, he can choose to use the default parameters; if you lower the price parameter, you may not find enough providers;
+>
+> If you increase the ks parameter, you may not find enough keepers; if you increase the ps parameter, you may not find enough providers.
 
-- user 的 LFS 如何启动？
+#### What are the LFS initialization errors of user?
 
-```
-在确认`mefs-user daemon`运行，而且运行的角色是user后，运行`mefs-user lfs start`；
-返回值返回时候，会有启动成功或者失败的信息，启动过程包括全网查询和合约签署，因而启动时间比较长。
+* Input parameter error
 
-user启动lfs的时候，可以选择使用默认参数；调低price参数，可能会找不到足够的provider；
-调高ks参数可能会找不到足够的keeper数量；调高ps参数，可能会找不到足够的provider。
-```
+> ps parameter setting should be greater than 1, other parameters should be greater than 0; rdo is true/false.
 
-- user 的 LFS 初始化错误有哪些？
+* Insufficient amount in user account
 
-  - 输入参数错误
+> The greater the storage duration and the storage size, the greater the amount required to sign the contract.
 
-  ```
-  ps参数设置要大于1，其他参数要大于0；rdo为true/false
-  ```
+* What should I do if I cannot find enough number of keeper/provider after wrong parameter input?
 
-  - user 账户的金额不足
+> Restart LFS, set new parameters, and set rdo to true.
 
-  ```
-  设置的存储时长越大，存储大小越大，签署合约需要的金额越多；
-  ```
+#### What are the common mistakes of LFS operation?
 
-  - 参数输入错误后，找不到足够的 keeper 数量/provider 数量怎么办？
+* When the bucket is created, the bucket already exists.
 
-  ```
-  重新启动LFS，设置新的参数，rdo设置为true；
-  ```
+> This means that the bucket has been created with this name, and now the bucket is deleted, only marking records, not real deletion.
+>
+> Therefore, even if the bucket is deleted, creating it with this name again will still show that the bucket already exists.
 
-- LFS 的操作的常见错误有哪些？
+* When downloading, it shows that the file already exists
 
-  - 创建 bucket 的时候显示 bucket 已存在
+> This is because the file already exists in the current directory, you can download it from another directory, or rename the file in the current directory.
 
-  ```
-  这说明已经用这个名字创建过bucket，现在bucket删除，只做标记记录，不是真正的删除，
-  因此即使删除了bucket，再次使用此名字创建还是会显示bucket已存在。
-  ```
+* When uploading, it shows that the file already exists
 
-  - 下载的时候，显示文件已存在
+> This means that there is already a file with this name in the currently uploaded bucket. Now that the file is deleted, it is only marked for recording, not a real deletion. So even if the file is deleted, creating it with this name again will still show that the file already exists. You can modify the upload path, for example, `mefs-user lfs put_object objectName bucketName/<new dir name>`,
+> upload to the directory of < new dir name > corresponding to bucketName.
 
-  ```
-  这是由于当前目录已存在此文件，可以换一个目录下载，或者将当前目录下的文件重命名。
-  ```
+## Provider
 
-  - 上传的时候，显示文件已存在
+#### What is the pos of the provider?
 
-  ```
-  这说明当前上传的bucket中已有这个名字的文件，现在文件删除，只做标记记录，不是真正的删除，
-  因此即使删除了文件，再次使用此名字创建还是会显示文件已存在。可以修改上传到的路径，
-  例如`mefs-user lfs put_object objectName bucketName/<new dir name>`，
-  上传到bucketName对应的<new dir name>的目录下。
-  ```
+> The pos function is used for cold start. When the provider just joins the network, the amount of stored data is small.
+>
+> Pos generates local data according to the size of the mortgage space, and responds to the keeper challenge;
+>
+> When the provider receives the actual user data, it will gradually delete the pos data;
+>
+> The difference between pos data and actual user data is that the price of pos data is 1/10 of the default price, and the pos data will not be repaired.
 
-## provider
+#### How does the provider modify its price?
 
-- provider 的 pos 是什么？
+> When the provider is started, it resets its price parameters and sets rdo to true to update its storage price.
 
-```
-pos功能是冷启动使用的，在provider刚加入网络的时候，存储的数据量较少，
-pos根据抵押的空间大小，生成本地数据，响应keeper挑战；
-在provider收到实际用户数据的时候，会逐步删除pos数据；
-pos数据和实际用户的数据区别在于：pos数据的价格为默认价格的1/10，pos数据不会被修复。
-```
+#### How does the provider set up its own master keeper?
 
-- provider 如何修改自己的价格？
-
-```
-provider在启动的时候，重新设置价格参数，将rdo设置为true，即可更新自己的存储价格。
-```
-
-- provider 如何设置自己的主 keeper？
-
-```
-provider 在运行的时候，可以通过`mefs contract addMasterKeeper 0x...`设置自己的主keeper；
-主keeper会优先提供自己的provider，以及触发upkeeping合约中的时空支付。
-```
+> When the provider is running, it can set its own master keeper through `mefs contract addMasterKeeper 0x...`;
+> The main keeper will give priority to providing its own provider and trigger the time and space payment in the upkeeping contract.
 
 ## others
 
-- 系统中有哪些 keeper？
+#### Which keeper is in the system?
 
 ```
-以下为公开的keeper的账户地址：
+The following is the public keeper's account address:
 0x1adCa07Ae9bC70fc8c8d4C972176d1a1C810f0Ec
 0xE434216FDF5573D8334Cb65cA2Df053e8A6f76C5
 0x0614bc4f711dC47Fb0BE3B3300CDcB3339F2dD88
@@ -160,16 +127,12 @@ provider 在运行的时候，可以通过`mefs contract addMasterKeeper 0x...`�
 0x071E7e6163B5855Fad5837BDDf1C50b70327074e
 ```
 
-- 如何设置区块链的 api 地址？
+#### How to set the api address of the blockchain?
 
-```
-运行`mefs-user/keeper/provider config Eth`，可以查看自己连接的区块链的地址，
-若想修改，可以运行`mefs-user/keeper/provider config Eth xxx`, xxx为链的api地址。
-格式为`http://ip:port`
-```
+> Run `mefs-user/keeper/provider config Eth` to view the address of the blockchain to which you are connected,
+> If you want to modify, you can run `mefs-user/keeper/provider config Eth xxx`, where xxx is the api address of the chain.
+> The format is `http://ip:port`
 
-- 如何查看自己的网络连接状态？
+#### How can I check my network connection status?
 
-```
-运行`mefs-user/keeper/provider swarm peers`查看自己连接的节点。
-```
+> Run `mefs-user/keeper/provider swarm peers` to view the nodes you are connected to.

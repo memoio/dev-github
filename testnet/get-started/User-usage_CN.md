@@ -41,7 +41,7 @@
 
 ## 启动
 
-启动期间由于需要匹配合约，部署合约，耗时约 30 分钟
+初次启动期间由于需要部署合约、匹配节点，耗时约 30 分钟
 
 ```shell
 // 启动docker; 4001用于网络连接，5080用于S3接口
@@ -57,7 +57,7 @@ sudo docker run -d --stop-timeout 30 \
     --name <container name> memoio/mefs-user:latest
 ```
 
-参数解释：
+### 参数解释：
 
 - WALLET：用户地址（0x...），必须指明；
 - PASSWORD: keyfile 的密码，若是以 docker 后台方式运行，必要；以前台方式运行，可以在运行过程中输入；
@@ -66,7 +66,7 @@ sudo docker run -d --stop-timeout 30 \
 - storage dir：数据目录；
 - keystore dir：注册后导出的 keyfile 所在的位置，keyfile 的名字即 WALLET；
 
-日志文件：
+### 日志文件：
 在< storage dir >/.mefs 目录下，启动日志 daemon.stdout.xx 以及 logs 目录内的运行日志；
 在运行时，可以查看运行日志；运行出错的时候，可以查看启动日志。
 
@@ -76,6 +76,6 @@ sudo docker run -d --stop-timeout 30 \
 > sudo docker exec -it <container name> bash
 ```
 
-- cli 方式使用见命令文档
+- cli 方式使用见[命令文档](http://132.232.87.203:8088/508dev/dev-github/tree/master/docs/cmd)
 
-- S3 接口使用见 S3 文档
+- S3 接口使用见[S3文档](http://132.232.87.203:8088/508dev/dev-github/tree/master/docs/api)

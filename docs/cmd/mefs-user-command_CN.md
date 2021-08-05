@@ -382,6 +382,104 @@ mefs-user lfs show_storage --addr=<public key>
 
 输出为相应的空间，格式为两位小数带单位（kb）
 
+### http 操作
+
+mefs 的命令都可以使用 http 进行操作
+
+#### 配置
+
+在 mefs-user 启动之前，进行如下配置：
+
+```shell
+// mefs api的端口设置,默认为5001
+mefs-user config Addresses.API /ip4/0.0.0.0/tcp/5001
+// 跨域访问
+mefs-user config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+mefs-user config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
+```
+
+然后重新启动 mefs-user 即可使用 http 方式进行操作。
+
+#### 使用
+
+一个类似于如下的命令：
+
+```shell
+mefs-user rootcmd subcmd <arg1> <arg2> -opname1=<op1> -opname2=<op2>
+```
+
+对应的 http 请求为：
+
+```shell
+curl  "http://<ip>:<port>/api/v0/api/v0/<rootcmd>/<subcmd>?arg=<arg1>&arg=<arg2>&opname1=<op1>&opname2=<op2>"
+```
+
+ip 为启动 mefs-user 的机器的网络地址，port 默认为 5001，若运行前配置了跨域访问，可以使用外网 ip 进行访问，否则只能通过 127.0.0.1 访问。
+
+#### example
+
+- 显示所有 bucket 的信息
+
+```shell
+curl  "http://127.0.0.1:5001/api/v0/lfs/list_buckets?addr=<public key>"
+```
+
+输出是标准的 json 格式
+
+```json
+{
+  "Method": "List Buckets",
+  "Buckets": [
+    {
+      "BucketName": "<BucketName>",
+      "BucketID": "<BucketID>",
+      "Ctime": "<Ctime>",
+      "Policy": "<Policy>",
+      "DataCount": "<DataCount>",
+      "ParityCount": "<ParityCount>"
+    },
+    {
+      "BucketName": "<BucketName>",
+      "BucketID": "<BucketID>",
+      "Ctime": "<Ctime>",
+      "Policy": "<Policy>",
+      "DataCount": "<DataCount>",
+      "ParityCount": "<ParityCount>"
+    }
+  ]
+}
+```
+
+- 显示某 bucket 的所有 object 的信息
+
+```shell
+curl  "http://127.0.0.1:5001/api/v0/lfs/list_objects?arg=<BucketName>&addr=<public key>"
+```
+
+输出是标准的 json 格式
+
+```json
+{
+  "Method": "List Objects",
+  "Objects": [
+    {
+      "ObjectName": "<ObjectName>",
+      "ObjectSize": "<ObjectSize>",
+      "Ctime": "<Ctime>",
+      "Dir": "<Dir>",
+      "LatestChalTime": "<LatestChalTime>"
+    },
+    {
+      "ObjectName": "<ObjectName>",
+      "ObjectSize": "<ObjectSize>",
+      "Ctime": "<Ctime>",
+      "Dir": "<Dir>",
+      "LatestChalTime": "<LatestChalTime>"
+    }
+  ]
+}
+```
+
 ### 网关模式
 
 多个用户可以共用一个 mefs 的运行程序
@@ -417,3 +515,31 @@ addr：用户地址
 --pwd：用户密码
 ```
 
+#### 使用
+
+- cli
+
+```shell
+mefs-user rootcmd subcmd arg1 op1=arg2 --addr=<public key>
+```
+
+- http
+
+```shell
+curl  "http://<ip>:5001/api/v0/api/v0/<roocmd>/<subcmd>?arg=<arg1>&op1=<arg2>&addr=<public key>"
+```
+
+#### example
+
+地址为 public key 的用户从 BucketName 桶内获取 ObjectName 名字的文件
+
+- cli
+
+```shell
+mefs lfs get_object <BucketName> <ObjectName> --addr=<public key>
+```
+
+- http
+```shell
+curl  "http://127.0.0.1:5001/api/v0/lfs/get_object?arg=<BucketName>&arg=<ObjectName>&addr=<public key>"
+```
